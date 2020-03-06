@@ -273,6 +273,22 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
       }
     });
 
+    addAttributeProcessor(Attributes.View.MarginStart, new DimensionAttributeProcessor<V>() {
+      @Override
+      public void setDimension(V view, float dimension) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+          ViewGroup.MarginLayoutParams layoutParams;
+          layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+          layoutParams.setMargins((int) dimension, layoutParams.topMargin, layoutParams.rightMargin, layoutParams.bottomMargin);
+          view.setLayoutParams(layoutParams);
+        } else {
+          if (ProteusConstants.isLoggingEnabled()) {
+            Log.e(TAG, "margins can only be applied to views with parent ViewGroup");
+          }
+        }
+      }
+    });
+
     addAttributeProcessor(Attributes.View.MarginTop, new DimensionAttributeProcessor<V>() {
       @Override
       public void setDimension(V view, float dimension) {
@@ -290,6 +306,22 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
     });
 
     addAttributeProcessor(Attributes.View.MarginRight, new DimensionAttributeProcessor<V>() {
+      @Override
+      public void setDimension(V view, float dimension) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+          ViewGroup.MarginLayoutParams layoutParams;
+          layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+          layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, (int) dimension, layoutParams.bottomMargin);
+          view.setLayoutParams(layoutParams);
+        } else {
+          if (ProteusConstants.isLoggingEnabled()) {
+            Log.e(TAG, "margins can only be applied to views with parent ViewGroup");
+          }
+        }
+      }
+    });
+
+    addAttributeProcessor(Attributes.View.MarginEnd, new DimensionAttributeProcessor<V>() {
       @Override
       public void setDimension(V view, float dimension) {
         if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
