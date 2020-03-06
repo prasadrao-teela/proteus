@@ -23,6 +23,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -84,7 +86,7 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
         @Override
         public void getBitmap(ProteusView view, String url, final DrawableValue.AsyncCallback callback) {
             GlideApp.with(ProteusActivity.this).load(url).placeholder(R.drawable.placeholder)
-                .error(R.drawable.image_broken).into(new ImageLoaderTarget(callback));
+                    .error(R.drawable.image_broken).into(new ImageLoaderTarget(callback));
         }
     };
 
@@ -97,14 +99,27 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
         @NonNull
         @Override
         public ProteusView onUnknownViewType(ProteusContext context, String type, Layout layout, ObjectValue data,
-            int index) {
+                                             int index) {
             // TODO: instead return some implementation of an unknown view
             throw new ProteusInflateException("Unknown view type '" + type + "' cannot be inflated");
         }
 
         @Override
-        public void onEvent(String event, Value value, ProteusView view) {
+        public void onEvent(String event, Value value, ProteusView proteusView) {
             Log.i("ProteusEvent", value.toString());
+            if(value.toString().equalsIgnoreCase("payTotalDue")){
+                ImageView imageViewTotalDue = (ImageView) proteusView;
+                ImageView imageViewOtherDue = (ImageView) view.getViewManager().findViewById(((ImageView) proteusView).getTag().toString());
+                imageViewTotalDue.setImageResource(R.drawable.ic_radio_button_checked);
+                imageViewOtherDue.setImageResource(R.drawable.ic_radio_button_unchecked);
+                view.getViewManager().findViewById("layoutOtherDue").setVisibility(View.GONE);
+            }else  if(value.toString().equalsIgnoreCase("payOtherDue")){
+                ImageView imageViewOtherDue = (ImageView) proteusView;
+                ImageView imageViewTotalDue = (ImageView) view.getViewManager().findViewById(((ImageView) proteusView).getTag().toString());
+                imageViewTotalDue.setImageResource(R.drawable.ic_radio_button_unchecked);
+                imageViewOtherDue.setImageResource(R.drawable.ic_radio_button_checked);
+                view.getViewManager().findViewById("layoutOtherDue").setVisibility(View.VISIBLE);
+            }
         }
     };
 
@@ -136,8 +151,8 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
         proteusManager = application.getProteusManager();
 
         ProteusContext context =
-            proteusManager.getProteus().createContextBuilder(this).setLayoutManager(layoutManager).setCallback(callback)
-                .setImageLoader(loader).setStyleManager(styleManager).build();
+                proteusManager.getProteus().createContextBuilder(this).setLayoutManager(layoutManager).setCallback(callback)
+                        .setImageLoader(loader).setStyleManager(styleManager).build();
 
         layoutInflater = context.getInflater();
     }
@@ -190,12 +205,12 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
         ProteusView view = layoutInflater.inflate("AlertDialogLayout", data);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(view.getAsView())
-            .setPositiveButton(R.string.action_alert_ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            }).show();
+                .setPositiveButton(R.string.action_alert_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).show();
     }
 
     void render() {
@@ -210,6 +225,18 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
 
         // Add the inflated view to the container
         container.addView(view.getAsView());
+
+        View radioGroupView = view.getViewManager().findViewById("radioGroup");
+        if (radioGroupView instanceof RadioGroup) {
+            RadioGroup radioGroup = (RadioGroup) radioGroupView;
+            radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+                if (layoutInflater.getUniqueViewId("radioButtonDueTotal") == checkedId) {
+                    view.getViewManager().findViewById(radioGroup.getTag().toString()).setVisibility(View.GONE);
+                } else if (layoutInflater.getUniqueViewId("radioButtonDueOther") == checkedId) {
+                    view.getViewManager().findViewById(radioGroup.getTag().toString()).setVisibility(View.VISIBLE);
+                }
+            });
+        }
     }
 
     void reload() {
