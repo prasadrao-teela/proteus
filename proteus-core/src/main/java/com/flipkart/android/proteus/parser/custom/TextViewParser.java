@@ -304,6 +304,13 @@ public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
                 }
             }
         });
+
+        addAttributeProcessor(Attributes.TextView.LineSpacingExtra, new DimensionAttributeProcessor<T>() {
+            @Override
+            public void setDimension(T view, float dimension) {
+                view.setLineSpacing(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dimension,  view.getResources().getDisplayMetrics()), 1.0f);
+            }
+        });
     }
 
 }
