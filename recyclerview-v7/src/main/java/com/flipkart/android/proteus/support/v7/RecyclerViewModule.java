@@ -17,6 +17,7 @@
 package com.flipkart.android.proteus.support.v7;
 
 import com.flipkart.android.proteus.ProteusBuilder;
+import com.flipkart.android.proteus.support.v7.adapter.CustomRecyclerViewAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.RecyclerViewAdapterFactory;
 import com.flipkart.android.proteus.support.v7.adapter.SimpleListAdapter;
@@ -30,7 +31,7 @@ import androidx.annotation.NonNull;
 /**
  * <p>
  * RecyclerView Module contains the attribute processors, Layout Manager and Adapter Factories, and
- * their default implementations for the {@link android.support.v7.widget.RecyclerView}.
+ * their default implementations for the {@link androidx.recyclerview.widget.RecyclerView}.
  * </p>
  *
  * @author adityasharat
@@ -40,6 +41,7 @@ import androidx.annotation.NonNull;
 public class RecyclerViewModule implements ProteusBuilder.Module {
 
   static final String ADAPTER_SIMPLE_LIST = "SimpleListAdapter";
+  static final String CUSTOM_RECYCLER_VIEW_ADAPTER = "CustomRecyclerViewAdapter";
 
   static final String LAYOUT_MANAGER_LINEAR = "LinearLayoutManager";
 
@@ -85,7 +87,7 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
   /**
    * Use the Recycler View Module Builder to register custom {@link ProteusRecyclerViewAdapter}
    * implementations. A default {@link ProteusRecyclerViewAdapter} and
-   * {@link android.support.v7.widget.RecyclerView.LayoutManager} are included by default. To
+   * {@link androidx.recyclerview.widget.RecyclerView.LayoutManager} are included by default. To
    * exclude them call {@link #excludeDefaultAdapters()} and {@link #excludeDefaultLayoutManagers()}.
    *
    * @author adityasharat
@@ -150,7 +152,7 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
 
     /**
      * <p>
-     * Will exclude the default {@link android.support.v7.widget.RecyclerView.LayoutManager}
+     * Will exclude the default {@link androidx.recyclerview.widget.RecyclerView.LayoutManager}
      * implementations from the module.
      * </p>
      *
@@ -183,6 +185,7 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
 
     private void registerDefaultAdapters() {
       register(ADAPTER_SIMPLE_LIST, SimpleListAdapter.BUILDER);
+      register(CUSTOM_RECYCLER_VIEW_ADAPTER, CustomRecyclerViewAdapter.BUILDER);
     }
 
     private void registerDefaultLayoutManagers() {
