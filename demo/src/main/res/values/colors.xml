@@ -26,7 +26,7 @@
     <color name="colorUnselected">#c8cde3</color>
     <color name="colorUnselectedDark">#99a1c5</color>
 
-    <color name="colorButtonBackground">#2b4d6cd9</color>
+    <color name="colorButtonBackground">#4D4d6cd9</color>
     <color name="colorButtonTextColor">#4d6cd9</color>
     <color name="colorThemeBlue">#4d6cd9</color>
 </resources>

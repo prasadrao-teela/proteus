@@ -79,7 +79,7 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
         return count;
     }
 
-    public String getSelectedItem() {
-        return data.get(ATTRIBUTE_ITEMS).getAsArray().get(checkedPosition).getAsString();
+    public ObjectValue getSelectedItem() {
+        return data.get(ATTRIBUTE_ITEMS).getAsArray().get(checkedPosition).getAsObject();
     }
 }
