@@ -39,17 +39,33 @@ public class TabLayoutParser<V extends TabLayout> extends ViewTypeParser<V> {
 
     @NonNull
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
-        @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout,
+        @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusTabLayout(context);
     }
 
     @Override
     protected void addAttributeProcessors() {
+
+        addAttributeProcessor("tabMode", new StringAttributeProcessor<V>() {
+            @Override
+            public void setString(V view, String value) {
+                view.setTabMode(TabsAttributeParser.getTabMode(value));
+            }
+        });
+
+        addAttributeProcessor("tabModeInt", new NumberAttributeProcessor<V>() {
+            @Override
+            public void setNumber(V view, @NonNull Number value) {
+                view.setTabMode(value.intValue());
+            }
+        });
+
         addAttributeProcessor("tabPadding", new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, float dimension) {
-                view.setPaddingRelative((int) dimension, (int) dimension, (int) dimension, (int) dimension);
+                view.setPaddingRelative((int) dimension, (int) dimension, (int) dimension,
+                    (int) dimension);
             }
         });
 
@@ -69,20 +85,6 @@ public class TabLayoutParser<V extends TabLayout> extends ViewTypeParser<V> {
             @Override
             public void setColor(V view, ColorStateList colors) {
                 view.setTabTextColors(colors);
-            }
-        });
-
-        addAttributeProcessor("tabMode", new StringAttributeProcessor<V>() {
-            @Override
-            public void setString(V view, String value) {
-                view.setTabMode(TabsAttributeParser.getTabMode(value));
-            }
-        });
-
-        addAttributeProcessor("tabModeInt", new NumberAttributeProcessor<V>() {
-            @Override
-            public void setNumber(V view, @NonNull Number value) {
-                view.setTabMode(value.intValue());
             }
         });
 

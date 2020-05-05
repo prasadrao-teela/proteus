@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 
 import com.flipkart.android.proteus.ProteusBuilder;
 import com.flipkart.android.proteus.support.design.adapter.SectionsPagerAdapter;
+import com.flipkart.android.proteus.support.design.adapter.TabViewPagerAdapter;
 import com.flipkart.android.proteus.support.design.adapter.ViewPagerAdapterFactory;
 import com.flipkart.android.proteus.support.design.parser.AppCompatEditTextParser;
 import com.flipkart.android.proteus.support.design.parser.TextInputEditTextParser;
@@ -41,6 +42,7 @@ import com.flipkart.android.proteus.support.design.widget.ViewPagerParser;
 public class DesignModule implements ProteusBuilder.Module {
 
     private static final String ADAPTER_SIMPLE_LIST = "SectionsPagerAdapter";
+    private static final String ADAPTER_TAB_VIEW_PAGER = "TabViewPagerAdapter";
 
     @NonNull private ViewPagerAdapterFactory adapterFactory;
 
@@ -73,6 +75,8 @@ public class DesignModule implements ProteusBuilder.Module {
 
         DesignModule build() {
             adapterFactory.register(DesignModule.ADAPTER_SIMPLE_LIST, SectionsPagerAdapter.BUILDER);
+            adapterFactory.register(DesignModule.ADAPTER_TAB_VIEW_PAGER,
+                TabViewPagerAdapter.BUILDER);
             return new DesignModule(adapterFactory);
         }
     }

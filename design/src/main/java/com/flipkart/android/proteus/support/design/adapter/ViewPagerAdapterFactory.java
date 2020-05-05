@@ -15,18 +15,18 @@ import java.util.Objects;
  **/
 public class ViewPagerAdapterFactory {
 
-    private Map<String, SectionsPagerAdapter.Builder> adapters = new HashMap<>();
+    private Map<String, ProteusPagerAdapter.Builder> adapters = new HashMap<>();
 
-    public void register(@NonNull String type, @NonNull SectionsPagerAdapter.Builder builder) {
+    public void register(@NonNull String type, @NonNull ProteusPagerAdapter.Builder builder) {
         adapters.put(type, builder);
     }
 
     @Nullable
-    public SectionsPagerAdapter.Builder remove(@NonNull String type) {
+    public ProteusPagerAdapter.Builder remove(@NonNull String type) {
         return adapters.remove(type);
     }
 
-    public SectionsPagerAdapter create(@NonNull String type, @NonNull ProteusViewPager view,
+    public ProteusPagerAdapter create(@NonNull String type, @NonNull ProteusViewPager view,
         @NonNull ObjectValue config) {
         return Objects.requireNonNull(adapters.get(type)).create(view, config);
     }

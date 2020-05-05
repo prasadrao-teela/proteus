@@ -14,4 +14,5 @@
  * limitations under the License.
  */
 
-include ':demo', ':proteus-core', ':gson-adapter', ':support-v4', ':recyclerview-v7', ':cardview-v7', ':design'
+include ':demo', ':proteus-core', ':gson-adapter', ':recyclerview-v7', ':cardview-v7', ':design'
+include ':support'

@@ -58,7 +58,7 @@ public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
 
     @Override
     protected void addAttributeProcessors() {
-        addAttributeProcessor(Attributes.TextView.maxLength, new NumberAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.EditText.maxLength, new NumberAttributeProcessor<T>() {
             @Override
             public void setNumber(T view, @NonNull Number value) {
                 view.setFilters(new InputFilter[]{new InputFilter.LengthFilter(value.intValue())});

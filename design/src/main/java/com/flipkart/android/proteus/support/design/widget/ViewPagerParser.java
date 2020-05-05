@@ -13,7 +13,8 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.managers.AdapterBasedViewManager;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
-import com.flipkart.android.proteus.support.design.adapter.SectionsPagerAdapter;
+import com.flipkart.android.proteus.processor.NumberAttributeProcessor;
+import com.flipkart.android.proteus.support.design.adapter.ProteusPagerAdapter;
 import com.flipkart.android.proteus.support.design.adapter.ViewPagerAdapterFactory;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Layout;
@@ -31,8 +32,7 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
 
     private static final String ATTRIBUTE_TYPE = ProteusConstants.TYPE;
 
-    @NonNull
-    private final ViewPagerAdapterFactory adapterFactory;
+    @NonNull private final ViewPagerAdapterFactory adapterFactory;
 
     public ViewPagerParser(@NonNull ViewPagerAdapterFactory adapterFactory) {
         this.adapterFactory = adapterFactory;
@@ -52,8 +52,8 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
 
     @NonNull
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
-        @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout,
+        @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         ProteusViewPager proteusViewPager = new ProteusViewPager(context);
         if (parent != null) {
             ((TabLayout) parent.findViewWithTag("tabLayout")).setupWithViewPager(proteusViewPager);
@@ -63,16 +63,12 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
 
     @NonNull
     @Override
-    public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view,
-        @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewTypeParser caller, @Nullable ViewGroup parent,
-        int dataIndex) {
+    public ProteusView.Manager createViewManager(@NonNull ProteusContext context,
+        @NonNull ProteusView view, @NonNull Layout layout, @NonNull ObjectValue data,
+        @Nullable ViewTypeParser caller, @Nullable ViewGroup parent, int dataIndex) {
         DataContext dataContext = createDataContext(context, layout, data, parent, dataIndex);
         return new AdapterBasedViewManager(context,
-            null != caller ? caller : this,
-            view.getAsView(),
-            layout,
-            dataContext
-        );
+            null != caller ? caller : this, view.getAsView(), layout, dataContext);
     }
 
     @Override
@@ -84,8 +80,9 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
                 if (value.isObject()) {
                     String type = value.getAsObject().getAsString(ATTRIBUTE_TYPE);
                     if (type != null) {
-                        SectionsPagerAdapter adapter =
-                            adapterFactory.create(type, (ProteusViewPager) view, value.getAsObject());
+                        ProteusPagerAdapter adapter =
+                            adapterFactory.create(type, (ProteusViewPager) view,
+                                value.getAsObject());
                         view.setAdapter(adapter);
                     }
                 }
@@ -93,17 +90,27 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
 
             @Override
             public void handleResource(V view, Resource resource) {
-                throw new IllegalArgumentException("View pager 'adapter' expects only object values");
+                throw new IllegalArgumentException(
+                    "View pager 'adapter' expects only object " + "values");
             }
 
             @Override
             public void handleAttributeResource(V view, AttributeResource attribute) {
-                throw new IllegalArgumentException("View pager 'adapter' expects only object values");
+                throw new IllegalArgumentException(
+                    "View pager 'adapter' expects only object " + "values");
             }
 
             @Override
             public void handleStyleResource(V view, StyleResource style) {
-                throw new IllegalArgumentException("View pager 'adapter' expects only object values");
+                throw new IllegalArgumentException(
+                    "View pager 'adapter' expects only object " + "values");
+            }
+        });
+
+        addAttributeProcessor("offscreenPageLimit", new NumberAttributeProcessor<V>() {
+            @Override
+            public void setNumber(V view, @NonNull Number value) {
+                view.setOffscreenPageLimit(value.intValue());
             }
         });
     }

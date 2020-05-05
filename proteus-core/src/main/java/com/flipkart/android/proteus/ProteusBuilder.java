@@ -57,70 +57,66 @@ public class ProteusBuilder {
   /**
    * The Default Module of Proteus.
    */
-  public static final Module DEFAULT_MODULE = new Module() {
+  private static final Module DEFAULT_MODULE = builder -> {
 
-    @Override
-    public void registerWith(ProteusBuilder builder) {
+    // register the default parsers
+    builder.register(new ViewParser());
+    builder.register(new IncludeParser());
+    builder.register(new ViewGroupParser());
+    builder.register(new RelativeLayoutParser());
+    builder.register(new LinearLayoutParser());
+    builder.register(new FrameLayoutParser());
+    builder.register(new ScrollViewParser());
+    builder.register(new HorizontalScrollViewParser());
+    builder.register(new ImageViewParser());
+    builder.register(new TextViewParser());
+    builder.register(new EditTextParser());
+    builder.register(new ButtonParser());
+    builder.register(new ImageButtonParser());
+    builder.register(new WebViewParser());
+    builder.register(new RatingBarParser());
+    builder.register(new CheckBoxParser());
+    builder.register(new RadioButtonParser());
+    builder.register(new RadioGroupParser());
+    builder.register(new ProgressBarParser());
+    builder.register(new HorizontalProgressBarParser());
+    builder.register(new StepProgressBarParser());
 
-      // register the default parsers
-      builder.register(new ViewParser());
-      builder.register(new IncludeParser());
-      builder.register(new ViewGroupParser());
-      builder.register(new RelativeLayoutParser());
-      builder.register(new LinearLayoutParser());
-      builder.register(new FrameLayoutParser());
-      builder.register(new ScrollViewParser());
-      builder.register(new HorizontalScrollViewParser());
-      builder.register(new ImageViewParser());
-      builder.register(new TextViewParser());
-      builder.register(new EditTextParser());
-      builder.register(new ButtonParser());
-      builder.register(new ImageButtonParser());
-      builder.register(new WebViewParser());
-      builder.register(new RatingBarParser());
-      builder.register(new CheckBoxParser());
-      builder.register(new RadioButtonParser());
-      builder.register(new RadioGroupParser());
-      builder.register(new ProgressBarParser());
-      builder.register(new HorizontalProgressBarParser());
-      builder.register(new StepProgressBarParser());
+    // register the default functions
+    builder.register(Function.DATE);
+    builder.register(Function.FORMAT);
+    builder.register(Function.JOIN);
+    builder.register(Function.NUMBER);
 
-      // register the default functions
-      builder.register(Function.DATE);
-      builder.register(Function.FORMAT);
-      builder.register(Function.JOIN);
-      builder.register(Function.NUMBER);
+    builder.register(Function.ADD);
+    builder.register(Function.SUBTRACT);
+    builder.register(Function.MULTIPLY);
+    builder.register(Function.DIVIDE);
+    builder.register(Function.MODULO);
 
-      builder.register(Function.ADD);
-      builder.register(Function.SUBTRACT);
-      builder.register(Function.MULTIPLY);
-      builder.register(Function.DIVIDE);
-      builder.register(Function.MODULO);
+    builder.register(Function.AND);
+    builder.register(Function.OR);
 
-      builder.register(Function.AND);
-      builder.register(Function.OR);
+    builder.register(Function.NOT);
 
-      builder.register(Function.NOT);
+    builder.register(Function.EQUALS);
+    builder.register(Function.LESS_THAN);
+    builder.register(Function.GREATER_THAN);
+    builder.register(Function.LESS_THAN_OR_EQUALS);
+    builder.register(Function.GREATER_THAN_OR_EQUALS);
 
-      builder.register(Function.EQUALS);
-      builder.register(Function.LESS_THAN);
-      builder.register(Function.GREATER_THAN);
-      builder.register(Function.LESS_THAN_OR_EQUALS);
-      builder.register(Function.GREATER_THAN_OR_EQUALS);
+    builder.register(Function.TERNARY);
 
-      builder.register(Function.TERNARY);
+    builder.register(Function.CHAR_AT);
+    builder.register(Function.CONTAINS);
+    builder.register(Function.IS_EMPTY);
+    builder.register(Function.LENGTH);
+    builder.register(Function.TRIM);
 
-      builder.register(Function.CHAR_AT);
-      builder.register(Function.CONTAINS);
-      builder.register(Function.IS_EMPTY);
-      builder.register(Function.LENGTH);
-      builder.register(Function.TRIM);
+    builder.register(Function.MAX);
+    builder.register(Function.MIN);
 
-      builder.register(Function.MAX);
-      builder.register(Function.MIN);
-
-      builder.register(Function.SLICE);
-    }
+    builder.register(Function.SLICE);
   };
 
   private static final int ID = -1;
