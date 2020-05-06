@@ -57,6 +57,6 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation "com.github.prasadrao-teela:dotsindicator:2c4aa0dad8"
+    api "com.github.prasadrao-teela:dotsindicator:2c4aa0dad8"
     testImplementation 'junit:junit:4.12'
 }
