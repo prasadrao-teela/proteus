@@ -22,7 +22,10 @@ import com.flipkart.android.proteus.ProteusBuilder;
 import com.flipkart.android.proteus.support.design.adapter.SectionsPagerAdapter;
 import com.flipkart.android.proteus.support.design.adapter.TabViewPagerAdapter;
 import com.flipkart.android.proteus.support.design.adapter.ViewPagerAdapterFactory;
+import com.flipkart.android.proteus.support.design.parser.AppCompatButtonParser;
 import com.flipkart.android.proteus.support.design.parser.AppCompatEditTextParser;
+import com.flipkart.android.proteus.support.design.parser.BorderlessButtonParser;
+import com.flipkart.android.proteus.support.design.parser.CircularTabIndicatorParser;
 import com.flipkart.android.proteus.support.design.parser.TextInputEditTextParser;
 import com.flipkart.android.proteus.support.design.parser.TextInputLayoutParser;
 import com.flipkart.android.proteus.support.design.widget.AppBarLayoutParser;
@@ -58,12 +61,15 @@ public class DesignModule implements ProteusBuilder.Module {
     public void registerWith(ProteusBuilder builder) {
         builder.register(new ViewPagerParser(adapterFactory))
             .register(new TabLayoutParser())
+            .register(new CircularTabIndicatorParser())
             .register(new AppBarLayoutParser())
             .register(new BottomNavigationViewParser())
             .register(new CollapsingToolbarLayoutParser())
             .register(new CoordinatorLayoutParser())
             .register(new FloatingActionButtonParser())
             .register(new AppCompatEditTextParser())
+            .register(new AppCompatButtonParser())
+            .register(new BorderlessButtonParser())
             .register(new TextInputEditTextParser())
             .register(new TextInputLayoutParser());
         DesignModuleAttributeHelper.register(builder);

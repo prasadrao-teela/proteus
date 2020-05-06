@@ -78,12 +78,9 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
       DrawableValue d = value.getAsDrawable();
       if (null != d) {
         ProteusLayoutInflater.ImageLoader loader = ((ProteusView) view).getViewManager().getContext().getLoader();
-        d.apply((ProteusView) view, view.getContext(), loader, new DrawableValue.Callback() {
-          @Override
-          public void apply(Drawable drawable) {
-            if (null != drawable) {
-              setDrawable(view, drawable);
-            }
+        d.apply((ProteusView) view, view.getContext(), loader, drawable -> {
+          if (null != drawable) {
+            setDrawable(view, drawable);
           }
         });
       }

@@ -7,6 +7,7 @@ import com.flipkart.android.proteus.support.adapter.SimpleSpinnerAdapter;
 import com.flipkart.android.proteus.support.adapter.SpinnerAdapterFactory;
 import com.flipkart.android.proteus.support.parser.OtpViewParser;
 import com.flipkart.android.proteus.support.parser.SpinnerParser;
+import com.flipkart.android.proteus.support.parser.SpringDotIndicatorParser;
 
 /**
  * Created by Prasad Rao on 29-04-2020 12:22
@@ -26,7 +27,9 @@ public class SupportModule implements ProteusBuilder.Module {
 
     @Override
     public void registerWith(ProteusBuilder builder) {
-        builder.register(new SpinnerParser(adapterFactory)).register(new OtpViewParser());
+        builder.register(new SpinnerParser(adapterFactory));
+        builder.register(new OtpViewParser());
+        builder.register(new SpringDotIndicatorParser());
     }
 
     public static class Builder {

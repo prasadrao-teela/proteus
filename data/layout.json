@@ -1,20 +1,100 @@
 {
-  "type": "FrameLayout",
-  "layout_width": "match_parent",
-  "layout_height": "match_parent",
-  "children": [
-    {
-      "type": "OtpEntryEditText",
-      "layout_width": "wrap_content",
-      "layout_height": "wrap_content",
-      "layout_gravity": "center",
-      "inputType": "number",
-      "itemBackground": "@drawable/bg_income_source",
-      "textColor": "@color/colorSelectedDark",
-      "itemCount": "6",
-      "text": "123",
-      "lineColor": "@android:color/transparent",
-      "viewType": "line"
-    }
-  ]
+    "type": "LinearLayout",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "orientation": "vertical",
+    "children": [{
+        "type": "ViewPager",
+        "layout_width": "match_parent",
+        "layout_height": "0dp",
+        "layout_weight": "1",
+        "id": "viewPagerIntroduction",
+        "tag": "viewPagerWithCircularIndicator",
+        "data": {
+            "items": "@{introduction}"
+        },
+        "adapter": {
+            "@": {
+                "type": "TabViewPagerAdapter",
+                "item-count": "@{items.$length}",
+                "item-layout": {
+                    "type": "LinearLayout",
+                    "layout_width": "match_parent",
+                    "layout_height": "wrap_content",
+                    "gravity": "center_horizontal",
+                    "orientation": "vertical",
+                    "data": {
+                        "item": "@{items[$index]}"
+                    },
+                    "children": [{
+                        "type": "ImageView",
+                        "layout_width": "wrap_content",
+                        "layout_height": "wrap_content",
+                        "layout_marginTop": "48dp",
+                        "id": "imageIntroductionSlide",
+                        "src": "@{item.icon}"
+                    }, {
+                        "type": "TextView",
+                        "id": "labelIntroductionTitle",
+                        "layout_width": "wrap_content",
+                        "layout_height": "wrap_content",
+                        "layout_marginTop": "32dp",
+                        "fontFamily": "fonts/rubik_medium.ttf",
+                        "gravity": "center_horizontal",
+                        "lineSpacingExtra": "3.7sp",
+                        "text": "@{item.title}",
+                        "textColor": "#2d3566",
+                        "textSize": "24sp"
+                    }, {
+                        "type": "TextView",
+                        "id": "labelIntroductionSubTitle",
+                        "layout_width": "wrap_content",
+                        "layout_height": "wrap_content",
+                        "layout_marginStart": "32dp",
+                        "layout_marginTop": "24dp",
+                        "layout_marginEnd": "32dp",
+                        "gravity": "center_horizontal",
+                        "lineSpacingExtra": "6sp",
+                        "text": "@{item.subTitle}",
+                        "textColor": "#6f7f9f",
+                        "textSize": "16sp"
+                    }]
+                }
+            }
+        }
+    }, {
+        "type": "SpringDotsIndicator",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "dotsColor": "#dbe1f8",
+        "dotsStrokeColor": "#dbe1f8",
+        "layout_gravity": "center_horizontal",
+        "dotIndicatorColor": "#1f37ca",
+        "setUpViewPager": true
+    }, {
+        "type": "LinearLayout",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "layout_marginStart": "32dp",
+        "layout_marginEnd": "32dp",
+        "children": [{
+            "type": "BorderlessButton",
+            "layout_width": "0dp",
+            "layout_height": "wrap_content",
+            "layout_weight": "1",
+            "gravity": "center",
+            "fontFamily": "fonts/rubik_medium.ttf",
+            "text": "SKIP",
+            "textColor": "@color/colorSelected"
+        }, {
+            "type": "AppCompatButton",
+            "layout_width": "0dp",
+            "layout_height": "wrap_content",
+            "fontFamily": "fonts/rubik_medium.ttf",
+            "layout_weight": "1",
+            "background": "@drawable/drawable_button",
+            "text": "NEXT",
+            "textColor": "@color/colorSelected"
+        }]
+    }]
 }

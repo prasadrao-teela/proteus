@@ -1,7 +1,7 @@
-package com.flipkart.android.proteus.support.design.widget;
+package com.flipkart.android.proteus.support.design.parser;
 
 import android.content.res.ColorStateList;
-import android.graphics.drawable.Drawable;
+import android.graphics.Color;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -13,11 +13,11 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
-import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.GravityAttributeProcessor;
 import com.flipkart.android.proteus.processor.NumberAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.support.design.parser.TabsAttributeParser;
+import com.flipkart.android.proteus.support.design.R;
+import com.flipkart.android.proteus.support.design.widget.ProteusTabLayout;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.google.android.material.tabs.TabLayout;
@@ -25,12 +25,12 @@ import com.google.android.material.tabs.TabLayout;
 /**
  * Created by Prasad Rao on 28-02-2020 18:18
  **/
-public class TabLayoutParser<V extends TabLayout> extends ViewTypeParser<V> {
+public class CircularTabIndicatorParser<V extends TabLayout> extends ViewTypeParser<V> {
 
     @NonNull
     @Override
     public String getType() {
-        return "TabLayout";
+        return "CircularTabIndicator";
     }
 
     @Nullable
@@ -44,6 +44,8 @@ public class TabLayoutParser<V extends TabLayout> extends ViewTypeParser<V> {
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout,
         @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         ProteusTabLayout tabLayout = new ProteusTabLayout(context);
+        tabLayout.setSelectedTabIndicatorColor(Color.TRANSPARENT);
+        tabLayout.setTabTextColors(Color.TRANSPARENT, Color.TRANSPARENT);
         if (parent != null) {
             ViewPager viewPager = parent.findViewWithTag("viewPagerWithCircularIndicator");
             if (viewPager != null) {
@@ -63,30 +65,11 @@ public class TabLayoutParser<V extends TabLayout> extends ViewTypeParser<V> {
             }
         });
 
-        addAttributeProcessor("tabModeInt", new NumberAttributeProcessor<V>() {
-            @Override
-            public void setNumber(V view, @NonNull Number value) {
-                view.setTabMode(value.intValue());
-            }
-        });
-
         addAttributeProcessor("tabPadding", new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, float dimension) {
                 view.setPaddingRelative((int) dimension, (int) dimension, (int) dimension,
                     (int) dimension);
-            }
-        });
-
-        addAttributeProcessor("tabTextColors", new ColorResourceProcessor<V>() {
-            @Override
-            public void setColor(V view, int color) {
-                throw new IllegalArgumentException("itemIconTint must be a color state list");
-            }
-
-            @Override
-            public void setColor(V view, ColorStateList colors) {
-                view.setTabTextColors(colors);
             }
         });
 
@@ -102,52 +85,40 @@ public class TabLayoutParser<V extends TabLayout> extends ViewTypeParser<V> {
             }
         });
 
-        addAttributeProcessor("selectedTabIndicatorColor", new ColorResourceProcessor<V>() {
+        addAttributeProcessor("tabGravity", new NumberAttributeProcessor<V>() {
             @Override
-            public void setColor(V view, int color) {
-                view.setSelectedTabIndicatorColor(color);
-            }
-
-            @Override
-            public void setColor(V view, ColorStateList colors) {
-                view.setSelectedTabIndicatorColor(colors.getDefaultColor());
+            public void setNumber(V view, @NonNull Number value) {
+                view.setTabGravity(value.intValue());
             }
         });
 
-        addAttributeProcessor("tabGravity", new GravityAttributeProcessor<V>() {
+        addAttributeProcessor("viewPagerTag", new StringAttributeProcessor<V>() {
             @Override
-            public void setGravity(V view, int gravity) {
-                view.setTabGravity(gravity);
-            }
-        });
-
-        addAttributeProcessor("tabBackground", new DrawableResourceProcessor<V>() {
-            @Override
-            public void setDrawable(V view, Drawable drawable) {
+            public void setString(V view, String value) {
                 view.clearOnTabSelectedListeners();
                 view.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
-                        tab.setIcon(android.R.drawable.ic_input_add);
+                        tab.setIcon(R.drawable.selected_dot);
                     }
 
                     @Override
                     public void onTabUnselected(TabLayout.Tab tab) {
-                        tab.setIcon(android.R.drawable.ic_delete);
+                        tab.setIcon(R.drawable.default_dot);
                     }
 
                     @Override
                     public void onTabReselected(TabLayout.Tab tab) {
-                        tab.setIcon(android.R.drawable.ic_input_add);
+                        tab.setIcon(R.drawable.selected_dot);
                     }
                 });
                 for (int i = 0; i < view.getTabCount(); i++) {
                     TabLayout.Tab tab = view.getTabAt(i);
                     if (tab != null) {
                         if (i == 0) {
-                            tab.setIcon(android.R.drawable.ic_input_add);
+                            tab.setIcon(R.drawable.selected_dot);
                         } else {
-                            tab.setIcon(android.R.drawable.ic_delete);
+                            tab.setIcon(R.drawable.default_dot);
                         }
                     }
                 }

@@ -76,7 +76,8 @@ public class TabViewPagerAdapter extends ProteusPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return data.getAsArray(ITEMS).get(position).getAsObject().getAsString(TITLE);
+        final Value title = data.getAsArray(ITEMS).get(position).getAsObject().get(TITLE);
+        return title == null ? null : title.getAsString();
     }
 
     public static final Builder<TabViewPagerAdapter> BUILDER = (viewPager, config) -> {

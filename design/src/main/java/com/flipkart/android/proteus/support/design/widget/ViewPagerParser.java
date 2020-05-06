@@ -1,5 +1,6 @@
 package com.flipkart.android.proteus.support.design.widget;
 
+import android.graphics.drawable.Drawable;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.managers.AdapterBasedViewManager;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
+import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.NumberAttributeProcessor;
 import com.flipkart.android.proteus.support.design.adapter.ProteusPagerAdapter;
 import com.flipkart.android.proteus.support.design.adapter.ViewPagerAdapterFactory;
@@ -33,6 +35,8 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
     private static final String ATTRIBUTE_TYPE = ProteusConstants.TYPE;
 
     @NonNull private final ViewPagerAdapterFactory adapterFactory;
+
+    private TabLayout tabLayout;
 
     public ViewPagerParser(@NonNull ViewPagerAdapterFactory adapterFactory) {
         this.adapterFactory = adapterFactory;
@@ -56,7 +60,10 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
         @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         ProteusViewPager proteusViewPager = new ProteusViewPager(context);
         if (parent != null) {
-            ((TabLayout) parent.findViewWithTag("tabLayout")).setupWithViewPager(proteusViewPager);
+            tabLayout = parent.findViewWithTag("tabLayout");
+            if (tabLayout != null) {
+                tabLayout.setupWithViewPager(proteusViewPager);
+            }
         }
         return proteusViewPager;
     }
@@ -111,6 +118,42 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
             @Override
             public void setNumber(V view, @NonNull Number value) {
                 view.setOffscreenPageLimit(value.intValue());
+            }
+        });
+
+        addAttributeProcessor("tabBackground", new DrawableResourceProcessor<V>() {
+            @Override
+            public void setDrawable(V view, Drawable drawable) {
+
+                if (tabLayout == null) return;
+
+                tabLayout.clearOnTabSelectedListeners();
+                tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        tab.setIcon(android.R.drawable.ic_input_add);
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+                        tab.setIcon(android.R.drawable.ic_delete);
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+                        tab.setIcon(android.R.drawable.ic_input_add);
+                    }
+                });
+                for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                    TabLayout.Tab tab = tabLayout.getTabAt(i);
+                    if (tab != null) {
+                        if (i == 0) {
+                            tab.setIcon(android.R.drawable.ic_input_add);
+                        } else {
+                            tab.setIcon(android.R.drawable.ic_delete);
+                        }
+                    }
+                }
             }
         });
     }
