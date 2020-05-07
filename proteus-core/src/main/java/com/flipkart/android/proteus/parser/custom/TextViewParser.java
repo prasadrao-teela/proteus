@@ -23,6 +23,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.text.method.ScrollingMovementMethod;
 import android.text.util.Linkify;
 import android.util.TypedValue;
 import android.view.ViewGroup;
@@ -307,6 +308,12 @@ public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
             }
         });
 
+        addAttributeProcessor(Attributes.TextView.scrollbars, new StringAttributeProcessor<T>() {
+            @Override
+            public void setString(T view, String value) {
+                view.setMovementMethod(new ScrollingMovementMethod());
+            }
+        });
     }
 
 }

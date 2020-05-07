@@ -170,6 +170,7 @@ public class Attributes {
         public static final String TextAllCaps = "textAllCaps";
         public static final String Hint = "hint";
         public static final String lineSpacingExtra = "lineSpacingExtra";
+        public static final String scrollbars = "scrollbars";
     }
 
     public static final class EditText {

@@ -3,98 +3,58 @@
     "layout_width": "match_parent",
     "layout_height": "wrap_content",
     "orientation": "vertical",
+    "padding": "24dp",
     "children": [{
-        "type": "ViewPager",
-        "layout_width": "match_parent",
-        "layout_height": "0dp",
-        "layout_weight": "1",
-        "id": "viewPagerIntroduction",
-        "tag": "viewPagerWithCircularIndicator",
-        "data": {
-            "items": "@{introduction}"
-        },
-        "adapter": {
-            "@": {
-                "type": "TabViewPagerAdapter",
-                "item-count": "@{items.$length}",
-                "item-layout": {
-                    "type": "LinearLayout",
-                    "layout_width": "match_parent",
-                    "layout_height": "wrap_content",
-                    "gravity": "center_horizontal",
-                    "orientation": "vertical",
-                    "data": {
-                        "item": "@{items[$index]}"
-                    },
-                    "children": [{
-                        "type": "ImageView",
-                        "layout_width": "wrap_content",
-                        "layout_height": "wrap_content",
-                        "layout_marginTop": "48dp",
-                        "id": "imageIntroductionSlide",
-                        "src": "@{item.icon}"
-                    }, {
-                        "type": "TextView",
-                        "id": "labelIntroductionTitle",
-                        "layout_width": "wrap_content",
-                        "layout_height": "wrap_content",
-                        "layout_marginTop": "32dp",
-                        "fontFamily": "fonts/rubik_medium.ttf",
-                        "gravity": "center_horizontal",
-                        "lineSpacingExtra": "3.7sp",
-                        "text": "@{item.title}",
-                        "textColor": "#2d3566",
-                        "textSize": "24sp"
-                    }, {
-                        "type": "TextView",
-                        "id": "labelIntroductionSubTitle",
-                        "layout_width": "wrap_content",
-                        "layout_height": "wrap_content",
-                        "layout_marginStart": "32dp",
-                        "layout_marginTop": "24dp",
-                        "layout_marginEnd": "32dp",
-                        "gravity": "center_horizontal",
-                        "lineSpacingExtra": "6sp",
-                        "text": "@{item.subTitle}",
-                        "textColor": "#6f7f9f",
-                        "textSize": "16sp"
-                    }]
-                }
-            }
-        }
-    }, {
-        "type": "SpringDotsIndicator",
+        "type": "TextView",
         "layout_width": "wrap_content",
         "layout_height": "wrap_content",
-        "dotsColor": "#dbe1f8",
-        "dotsStrokeColor": "#dbe1f8",
-        "layout_gravity": "center_horizontal",
-        "dotIndicatorColor": "#1f37ca",
-        "setUpViewPager": true
+        "fontFamily": "fonts/rubik_regular.ttf",
+        "lineSpacingExtra": "3.3sp",
+        "text": "Consent for Bureau Report",
+        "textColor": "#000759",
+        "textSize": "22sp"
     }, {
-        "type": "LinearLayout",
-        "layout_width": "match_parent",
+        "type": "TextView",
+        "layout_width": "wrap_content",
+        "layout_height": "0dp",
+        "layout_weight": "1",
+        "fontFamily": "fonts/rubik_regular.ttf",
+        "layout_marginTop": "16dp",
+        "background": {
+            "type": "shape",
+            "shape": "rectangle",
+            "children": [{
+                "type": "solid",
+                "color": "#f4f8ff"
+            }, {
+                "type": "corners",
+                "radius": "8dp"
+            }]
+        },
+        "lineSpacingExtra": "7sp",
+        "padding": "20dp",
+        "text": "I hereby appoint Prefr (Infocredit Services Pvt. Ltd.) as the authorised representative to receive my credit information from CIBIL / Equifax / Experian / CRIF High-mark (bureau). I hereby unconditionally consent to and instruct bureau to provide my credit information to me and Prefr\n\nBy submitting this form, I hereby authorise Prefr to do all of the following in connection with providing me with their services:\n\n1. Retain a copy of my credit information, along with other information I have given them access to under this authorisation, in accordance with Prefr’s Terms and Conditions and Privacy Policy\n2. Verify my identity and share personally identifiable information about me with the credit bureaus as required.",
+        "textColor": "#6f7f9f",
+        "textSize": "16sp",
+        "scrollbars": "vertical"
+    }, {
+        "type": "TextView",
+        "id": "buttonProceed",
+        "layout_width": "wrap_content",
         "layout_height": "wrap_content",
-        "layout_marginStart": "32dp",
-        "layout_marginEnd": "32dp",
-        "children": [{
-            "type": "BorderlessButton",
-            "layout_width": "0dp",
-            "layout_height": "wrap_content",
-            "layout_weight": "1",
-            "gravity": "center",
-            "fontFamily": "fonts/rubik_medium.ttf",
-            "text": "SKIP",
-            "textColor": "@color/colorSelected"
-        }, {
-            "type": "AppCompatButton",
-            "layout_width": "0dp",
-            "layout_height": "wrap_content",
-            "fontFamily": "fonts/rubik_medium.ttf",
-            "layout_weight": "1",
-            "background": "@drawable/drawable_button",
-            "text": "NEXT",
-            "textColor": "@color/colorSelected"
-        }]
+        "layout_gravity": "center_horizontal",
+        "layout_marginTop": "16dp",
+        "background": "@drawable/drawable_button",
+        "clickable": "true",
+        "focusable": "true",
+        "fontFamily": "fonts/rubik_medium.ttf",
+        "paddingLeft": "64dp",
+        "paddingTop": "16dp",
+        "gravity": "center",
+        "paddingRight": "64dp",
+        "paddingBottom": "16dp",
+        "onClick": "triggerBureauOtp",
+        "text": "I AGREE, SEND OTP",
+        "textColor": "@color/colorSelected"
     }]
 }
