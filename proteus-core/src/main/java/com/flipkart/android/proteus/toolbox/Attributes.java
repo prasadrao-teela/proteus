@@ -176,6 +176,7 @@ public class Attributes {
     public static final class EditText {
         public static final String maxLength = "maxLength";
         public static final String valueRange = "valueRange";
+        public static final String inputType = "inputType";
 
         private EditText() {}
     }

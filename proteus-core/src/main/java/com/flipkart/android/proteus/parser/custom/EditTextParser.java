@@ -27,7 +27,9 @@ import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.processor.NumberAttributeProcessor;
+import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
+import com.flipkart.android.proteus.util.InputTypes;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.view.ProteusEditText;
@@ -62,6 +64,13 @@ public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
             @Override
             public void setNumber(T view, @NonNull Number value) {
                 view.setFilters(new InputFilter[]{new InputFilter.LengthFilter(value.intValue())});
+            }
+        });
+
+        addAttributeProcessor(Attributes.EditText.inputType, new StringAttributeProcessor<T>() {
+            @Override
+            public void setString(T view, String value) {
+                view.setInputType(InputTypes.getInputType(value));
             }
         });
     }
