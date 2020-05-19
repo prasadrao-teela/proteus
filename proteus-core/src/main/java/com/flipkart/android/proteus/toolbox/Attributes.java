@@ -177,6 +177,7 @@ public class Attributes {
         public static final String maxLength = "maxLength";
         public static final String valueRange = "valueRange";
         public static final String inputType = "inputType";
+        public static final String nextAutoFocus = "nextAutoFocus"; //value are down, right,left and up
 
         private EditText() {}
     }

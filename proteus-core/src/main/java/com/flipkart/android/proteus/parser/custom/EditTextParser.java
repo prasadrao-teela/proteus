@@ -16,7 +16,10 @@
 
 package com.flipkart.android.proteus.parser.custom;
 
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
@@ -34,11 +37,16 @@ import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.view.ProteusEditText;
 
+import java.lang.reflect.Field;
+
 /**
  * Created by kirankumar on 25/11/14.
  */
 public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
-
+    private static final String FOCUS_DOWN = "down";
+    private static final String FOCUS_RIGHT = "right";
+    private static final String FOCUS_UP = "up";
+    private static final String FOCUS_LEFT = "left";
     @NonNull
     @Override
     public String getType() {
@@ -73,5 +81,69 @@ public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
                 view.setInputType(InputTypes.getInputType(value));
             }
         });
+        addAttributeProcessor(Attributes.EditText.nextAutoFocus, new StringAttributeProcessor<T>() {
+            @Override
+            public void setString(T view, String value) {
+                nextAutoFocus(view, value);
+            }
+        });
+    }
+
+    private void nextAutoFocus(EditText editText, String value) {
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int maxLength = getMaxLength(editText);
+                if (maxLength == s.length()) {
+                    View nextView = null;
+                    switch (value) {
+                        case FOCUS_DOWN:
+                            nextView = editText.focusSearch(View.FOCUS_DOWN);
+                            break;
+                        case FOCUS_RIGHT:
+                            nextView = editText.focusSearch(View.FOCUS_RIGHT);
+                            break;
+                        case FOCUS_UP:
+                            nextView = editText.focusSearch(View.FOCUS_UP);
+                            break;
+                        case FOCUS_LEFT:
+                            nextView = editText.focusSearch(View.FOCUS_LEFT);
+                            break;
+                    }
+                    if (nextView != null)
+                        nextView.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+    }
+
+
+    private int getMaxLength(EditText editText){
+        int length = 0;
+        try {
+            InputFilter[] inputFilters = editText.getFilters();
+            for (InputFilter filter : inputFilters) {
+                Class<?> c = filter.getClass();
+                if (c.getName().equals(
+                        "android.text.InputFilter$LengthFilter")) {
+                    Field[] f = c.getDeclaredFields();
+                    for (Field field : f) {
+                        if (field.getName().equals("mMax")) {
+                            field.setAccessible(true);
+                            length = (Integer) field.get(filter);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return length;
     }
 }
