@@ -23,6 +23,7 @@
     <color name="colorAccent">#1f37ca</color>
 
     <color name="colorSelected">#4d6cd9</color>
+    <color name="colorSelectedDark">#000759</color>
     <color name="colorUnselected">#c8cde3</color>
     <color name="colorUnselectedDark">#99a1c5</color>
 

@@ -16,3 +16,5 @@
 
 include ':demo', ':proteus-core', ':gson-adapter', ':recyclerview-v7', ':cardview-v7', ':design'
 include ':support'
+include ':animations'
+include ':external-libraries'

@@ -232,4 +232,18 @@ public class Attributes {
         public static final String IndeterminateTint = "indeterminateTint";
         public static final String SecondaryProgressTint = "secondaryProgressTint";
     }
+
+    public static final class SeekBar {
+        public static final String progressDrawable = "progressDrawable";
+        public static final String thumb = "thumb";
+        public static final String thumbOffset = "thumbOffset";
+    }
+
+    public static final class LottieAnimationView {
+        public static final String autoPlay = "autoPlay";
+        public static final String fileName = "fileName";
+        public static final String loop = "loop";
+        public static final String repeatCount = "repeatCount";
+        public static final String jsonWithCacheKey = "jsonWithCacheKey";
+    }
 }

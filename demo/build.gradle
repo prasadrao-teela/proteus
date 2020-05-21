@@ -81,5 +81,6 @@ android {
         implementation project(':cardview-v7')
         implementation project(':design')
         implementation project(':support')
+        implementation project(':animations')
     }
 }

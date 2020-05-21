@@ -111,6 +111,8 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
         @Override
         public void onEvent(String event, Value value, ProteusView view) {
             Log.i("ProteusEvent", value.toString());
+
+            System.out.println("========> "+view.getViewManager().getLayout().attributes);
             String[] events = value.toString().split("->");
             for (String eventHandlers : events) {
                 EventHandler eventHandler = EventHandler.getEventHandler(eventHandlers);

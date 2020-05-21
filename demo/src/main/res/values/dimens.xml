@@ -21,5 +21,5 @@
     <dimen name="defaultPadding">8dp</dimen>
     <dimen name="ab">?actionBarSize</dimen>
     <dimen name="sixty">60dp</dimen>
-
+    <dimen name="default_border_radius">8dp</dimen>
 </resources>
