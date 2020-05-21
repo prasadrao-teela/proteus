@@ -1,6 +1,7 @@
 package com.flipkart.android.proteus.support.design.widget;
 
 import android.content.Context;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -17,7 +18,7 @@ public class ProteusBorderlessButton extends AppCompatButton implements ProteusV
     private Manager manager;
 
     public ProteusBorderlessButton(Context context) {
-        super(context, null, R.style.Widget_AppCompat_Button_Borderless);
+        super(new ContextThemeWrapper(context, R.style.Widget_AppCompat_Button_Borderless), null, 0);
     }
 
     @Override

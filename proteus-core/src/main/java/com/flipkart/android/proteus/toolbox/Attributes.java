@@ -94,8 +94,8 @@ public class Attributes {
         public static final String Padding = "padding";
         public static final String PaddingBottom = "paddingBottom";
         public static final String PaddingEnd = "paddingEnd";
-        public static final String PaddingLeft = "paddingLeft";
-        public static final String PaddingRight = "paddingRight";
+        public static final String PaddingLeft = "paddingStart";
+        public static final String PaddingRight = "paddingEnd";
         public static final String PaddingStart = "paddingStart";
         public static final String PaddingTop = "paddingTop";
         public static final String RequiresFadingEdge = "requiresFadingEdge";

@@ -9,7 +9,6 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
-import com.flipkart.android.proteus.support.design.widget.ProteusAppCompatButton;
 import com.flipkart.android.proteus.support.design.widget.ProteusBorderlessButton;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
