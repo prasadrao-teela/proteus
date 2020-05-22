@@ -16,9 +16,13 @@
 
 package com.flipkart.android.proteus.parser.custom;
 
+import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -29,6 +33,8 @@ import androidx.annotation.Nullable;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
+import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
+import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.NumberAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
@@ -47,6 +53,9 @@ public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
     private static final String FOCUS_RIGHT = "right";
     private static final String FOCUS_UP = "up";
     private static final String FOCUS_LEFT = "left";
+    private final int DRAWABLE_RIGHT = 2;
+    private Drawable showPasswordDrawable, hidePasswordDrawable;
+
     @NonNull
     @Override
     public String getType() {
@@ -85,6 +94,49 @@ public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
             @Override
             public void setString(T view, String value) {
                 nextAutoFocus(view, value);
+            }
+        });
+
+        addAttributeProcessor(Attributes.EditText.enableShowPassword, new BooleanAttributeProcessor<T>() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public void setBoolean(T view, boolean value) {
+                if(value){
+                    view.setOnTouchListener((v, event) -> {
+                        if (event.getAction() == MotionEvent.ACTION_UP && view.getCompoundDrawables()[DRAWABLE_RIGHT] != null) {
+                            if (event.getRawX() >= view.getRight() - view.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width()) {
+                                if (view.getTransformationMethod() == null) {
+                                    view.setTransformationMethod(new PasswordTransformationMethod());
+                                    if(showPasswordDrawable != null){
+                                        view.setCompoundDrawablesWithIntrinsicBounds(null, null, showPasswordDrawable, null);
+                                    }
+                                    view.setSelection(view.getText().length());
+                                } else {
+                                    view.setTransformationMethod(null);
+                                    if(hidePasswordDrawable != null) {
+                                        view.setCompoundDrawablesWithIntrinsicBounds(null, null, hidePasswordDrawable, null);
+                                    }
+                                    view.setSelection(view.getText().length());
+                                }
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+                }
+            }
+        });
+        addAttributeProcessor(Attributes.EditText.showPasswordDrawable, new DrawableResourceProcessor<T>() {
+            @Override
+            public void setDrawable(T view, Drawable drawable) {
+                showPasswordDrawable = drawable;
+            }
+        });
+
+        addAttributeProcessor(Attributes.EditText.hidePasswordDrawable, new DrawableResourceProcessor<T>() {
+            @Override
+            public void setDrawable(T view, Drawable drawable) {
+                hidePasswordDrawable = drawable;
             }
         });
     }

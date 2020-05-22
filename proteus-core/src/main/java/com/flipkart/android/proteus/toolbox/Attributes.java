@@ -178,6 +178,9 @@ public class Attributes {
         public static final String valueRange = "valueRange";
         public static final String inputType = "inputType";
         public static final String nextAutoFocus = "nextAutoFocus"; //value are down, right,left and up
+        public static final String enableShowPassword = "enableShowPassword";
+        public static final String showPasswordDrawable = "showPasswordDrawable";
+        public static final String hidePasswordDrawable = "hidePasswordDrawable";
 
         private EditText() {}
     }
