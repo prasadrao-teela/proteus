@@ -181,6 +181,7 @@ public class Attributes {
         public static final String enableShowPassword = "enableShowPassword";
         public static final String showPasswordDrawable = "showPasswordDrawable";
         public static final String hidePasswordDrawable = "hidePasswordDrawable";
+        public static final String onOtpCompleted = "onOtpCompleted";
 
         private EditText() {}
     }
