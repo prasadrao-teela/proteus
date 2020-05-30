@@ -16,11 +16,12 @@
 
 package com.flipkart.android.proteus.support.v7.adapter;
 
-import com.flipkart.android.proteus.support.v7.widget.ProteusRecyclerView;
-import com.flipkart.android.proteus.value.ObjectValue;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.support.v7.widget.ProteusRecyclerView;
+import com.flipkart.android.proteus.value.ObjectValue;
 
 /**
  * ProteusRecyclerViewAdapter.
@@ -28,11 +29,25 @@ import androidx.recyclerview.widget.RecyclerView;
  * @author adityasharat
  */
 
-public abstract class ProteusRecyclerViewAdapter<VH extends ProteusViewHolder> extends RecyclerView.Adapter<VH> {
+public abstract class ProteusRecyclerViewAdapter<VH extends ProteusViewHolder>
+    extends RecyclerView.Adapter<VH> {
 
-  public interface Builder<A extends ProteusRecyclerViewAdapter> {
-    @NonNull
-    A create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config);
-  }
+    public interface Builder<A extends ProteusRecyclerViewAdapter<?>> {
+        @NonNull
+        A create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config);
+    }
 
+    protected OnItemClickListener onItemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public OnItemClickListener getOnItemClickListener() {
+        return onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(ProteusView view, ObjectValue data, int position);
+    }
 }

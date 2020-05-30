@@ -95,6 +95,10 @@ public class ProteusManager {
         return styles;
     }
 
+    public ProteusApi getApi() {
+        return api;
+    }
+
     public void addListener(@NonNull Listener listener) {
         listeners.add(listener);
     }

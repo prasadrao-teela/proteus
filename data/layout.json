@@ -31,6 +31,7 @@
             "type": "TextView",
             "layout_width": "wrap_content",
             "layout_height": "wrap_content",
+            "id": "textRequiredLoanAmount",
             "fontFamily": "fonts/rubik_medium.ttf",
             "lineSpacingExtra": "3.3sp",
             "text": "Rs. 80,000",
@@ -47,7 +48,8 @@
             "paddingStart": "0dp",
             "paddingEnd": "0dp",
             "max": "149",
-            "layout_marginTop": "24dp"
+            "layout_marginTop": "24dp",
+            "onProgressChanged": "onLoanAmountChanged"
         }, {
             "type": "LinearLayout",
             "layout_width": "match_parent",
@@ -90,11 +92,11 @@
             "type": "RecyclerView",
             "layout_width": "match_parent",
             "layout_height": "wrap_content",
-            "id": "listViewIncomeSelection",
+            "id": "listViewTenure",
             "itemMargin": "6dp",
             "validationRequired": true,
             "data": {
-                "items": "@{tenures}"
+                "items": "@{emiDetailsList}"
             },
             "layout_manager": {
                 "type": "GridLayoutManager",
@@ -133,70 +135,47 @@
                         }]
                     }
                 }
-            }
+            },
+            "onListItemSelected": "onTenureSelected"
         }, {
             "type": "LinearLayout",
             "layout_width": "match_parent",
             "layout_height": "wrap_content",
-            "orientation": "horizontal",
-            "layout_marginTop": "32dp",
-            "children": [{
-                "type": "TextView",
-                "layout_width": "0dp",
-                "layout_height": "wrap_content",
-                "layout_weight": "1",
-                "fontFamily": "fonts/rubik_medium.ttf",
-                "lineSpacingExtra": "3.3sp",
-                "text": "Rs. 6,325.00",
-                "textColor": "#000759",
-                "textSize": "16sp"
-            }, {
-                "type": "TextView",
-                "layout_width": "0dp",
-                "layout_height": "wrap_content",
-                "layout_weight": "1",
-                "fontFamily": "fonts/rubik_medium.ttf",
-                "lineSpacingExtra": "3.3sp",
-                "text": "1.50%",
-                "textColor": "#000759",
-                "textSize": "16sp"
-            }]
-        }, {
-            "type": "LinearLayout",
-            "layout_width": "match_parent",
-            "layout_height": "wrap_content",
-            "orientation": "horizontal",
-            "layout_marginTop": "8dp",
-            "children": [{
-                "type": "TextView",
-                "layout_width": "0dp",
-                "layout_height": "wrap_content",
-                "layout_weight": "1",
-                "fontFamily": "fonts/rubik_medium.ttf",
-                "lineSpacingExtra": "3.3sp",
-                "text": "Repayment Amount",
-                "textColor": "#99a1c5",
-                "textSize": "13sp"
-            }, {
-                "type": "TextView",
-                "layout_width": "0dp",
-                "layout_height": "wrap_content",
-                "layout_weight": "1",
-                "fontFamily": "fonts/rubik_medium.ttf",
-                "lineSpacingExtra": "3.3sp",
-                "text": "Monthly Interest",
-                "textColor": "#99a1c5",
-                "textSize": "13sp"
-            }]
-        }, {
-            "type": "LinearLayout",
-            "layout_width": "match_parent",
-            "layout_height": "wrap_content",
+            "id": "layoutEmiDetails",
+            "data": {
+                "item": "@{emiDetails}"
+            },
             "orientation": "vertical",
-            "layout_marginTop": "8dp",
-            "background": "#f4f8ff",
-            "padding": "16dp",
             "children": [{
+                "type": "LinearLayout",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "orientation": "horizontal",
+                "layout_marginTop": "32dp",
+                "children": [{
+                    "type": "TextView",
+                    "layout_width": "0dp",
+                    "layout_height": "wrap_content",
+                    "id": "textRepaymentAmount",
+                    "layout_weight": "1",
+                    "fontFamily": "fonts/rubik_medium.ttf",
+                    "lineSpacingExtra": "3.3sp",
+                    "text": "@{fn:format('Rs. %s',@{fn:number(@{item.emi})})}",
+                    "textColor": "#000759",
+                    "textSize": "16sp"
+                }, {
+                    "type": "TextView",
+                    "layout_width": "0dp",
+                    "layout_height": "wrap_content",
+                    "id": "textRateOfInterest",
+                    "layout_weight": "1",
+                    "fontFamily": "fonts/rubik_medium.ttf",
+                    "lineSpacingExtra": "3.3sp",
+                    "text": "@{fn:format('%s%%',@{item.roi})}",
+                    "textColor": "#000759",
+                    "textSize": "16sp"
+                }]
+            }, {
                 "type": "LinearLayout",
                 "layout_width": "match_parent",
                 "layout_height": "wrap_content",
@@ -209,8 +188,8 @@
                     "layout_weight": "1",
                     "fontFamily": "fonts/rubik_medium.ttf",
                     "lineSpacingExtra": "3.3sp",
-                    "text": "Repayment Date",
-                    "textColor": "#6f7f9f",
+                    "text": "Repayment Amount",
+                    "textColor": "#99a1c5",
                     "textSize": "13sp"
                 }, {
                     "type": "TextView",
@@ -219,63 +198,101 @@
                     "layout_weight": "1",
                     "fontFamily": "fonts/rubik_medium.ttf",
                     "lineSpacingExtra": "3.3sp",
-                    "text": "5th of every month",
-                    "textColor": "#000759",
+                    "text": "Monthly Interest",
+                    "textColor": "#99a1c5",
                     "textSize": "13sp"
                 }]
             }, {
                 "type": "LinearLayout",
                 "layout_width": "match_parent",
                 "layout_height": "wrap_content",
-                "orientation": "horizontal",
-                "layout_marginTop": "12dp",
+                "orientation": "vertical",
+                "layout_marginTop": "8dp",
+                "background": "#f4f8ff",
+                "padding": "16dp",
                 "children": [{
-                    "type": "TextView",
-                    "layout_width": "0dp",
+                    "type": "LinearLayout",
+                    "layout_width": "match_parent",
                     "layout_height": "wrap_content",
-                    "layout_weight": "1",
-                    "fontFamily": "fonts/rubik_medium.ttf",
-                    "lineSpacingExtra": "3.3sp",
-                    "text": "Processing Fee",
-                    "textColor": "#6f7f9f",
-                    "textSize": "13sp"
+                    "orientation": "horizontal",
+                    "layout_marginTop": "8dp",
+                    "children": [{
+                        "type": "TextView",
+                        "layout_width": "0dp",
+                        "layout_height": "wrap_content",
+                        "layout_weight": "1",
+                        "fontFamily": "fonts/rubik_medium.ttf",
+                        "lineSpacingExtra": "3.3sp",
+                        "text": "Repayment Date",
+                        "textColor": "#6f7f9f",
+                        "textSize": "13sp"
+                    }, {
+                        "type": "TextView",
+                        "layout_width": "0dp",
+                        "layout_height": "wrap_content",
+                        "layout_weight": "1",
+                        "fontFamily": "fonts/rubik_medium.ttf",
+                        "lineSpacingExtra": "3.3sp",
+                        "text": "@{emiDetails.repaymentDate}",
+                        "textColor": "#000759",
+                        "textSize": "13sp"
+                    }]
                 }, {
-                    "type": "TextView",
-                    "layout_width": "0dp",
+                    "type": "LinearLayout",
+                    "layout_width": "match_parent",
                     "layout_height": "wrap_content",
-                    "layout_weight": "1",
-                    "fontFamily": "fonts/rubik_medium.ttf",
-                    "lineSpacingExtra": "3.3sp",
-                    "text": "Rs.100",
-                    "textColor": "#000759",
-                    "textSize": "13sp"
-                }]
-            }, {
-                "type": "LinearLayout",
-                "layout_width": "match_parent",
-                "layout_height": "wrap_content",
-                "orientation": "horizontal",
-                "layout_marginTop": "12dp",
-                "children": [{
-                    "type": "TextView",
-                    "layout_width": "0dp",
-                    "layout_height": "wrap_content",
-                    "layout_weight": "1",
-                    "fontFamily": "fonts/rubik_medium.ttf",
-                    "lineSpacingExtra": "3.3sp",
-                    "text": "Total Interest",
-                    "textColor": "#6f7f9f",
-                    "textSize": "13sp"
+                    "orientation": "horizontal",
+                    "layout_marginTop": "12dp",
+                    "children": [{
+                        "type": "TextView",
+                        "layout_width": "0dp",
+                        "layout_height": "wrap_content",
+                        "layout_weight": "1",
+                        "fontFamily": "fonts/rubik_medium.ttf",
+                        "lineSpacingExtra": "3.3sp",
+                        "text": "Processing Fee",
+                        "textColor": "#6f7f9f",
+                        "textSize": "13sp"
+                    }, {
+                        "type": "TextView",
+                        "layout_width": "0dp",
+                        "layout_height": "wrap_content",
+                        "id": "textProcessingFeeAmount",
+                        "layout_weight": "1",
+                        "fontFamily": "fonts/rubik_medium.ttf",
+                        "lineSpacingExtra": "3.3sp",
+                        "text": "@{fn:format('Rs. %s',@{fn:number(@{item.processingFee})})}",
+                        "textColor": "#000759",
+                        "textSize": "13sp"
+                    }]
                 }, {
-                    "type": "TextView",
-                    "layout_width": "0dp",
+                    "type": "LinearLayout",
+                    "layout_width": "match_parent",
                     "layout_height": "wrap_content",
-                    "layout_weight": "1",
-                    "fontFamily": "fonts/rubik_medium.ttf",
-                    "lineSpacingExtra": "3.3sp",
-                    "text": "Rs.232",
-                    "textColor": "#000759",
-                    "textSize": "13sp"
+                    "orientation": "horizontal",
+                    "layout_marginTop": "12dp",
+                    "children": [{
+                        "type": "TextView",
+                        "layout_width": "0dp",
+                        "layout_height": "wrap_content",
+                        "layout_weight": "1",
+                        "fontFamily": "fonts/rubik_medium.ttf",
+                        "lineSpacingExtra": "3.3sp",
+                        "text": "Total Interest",
+                        "textColor": "#6f7f9f",
+                        "textSize": "13sp"
+                    }, {
+                        "type": "TextView",
+                        "layout_width": "0dp",
+                        "layout_height": "wrap_content",
+                        "id": "textTotalInterestAmount",
+                        "layout_weight": "1",
+                        "fontFamily": "fonts/rubik_medium.ttf",
+                        "lineSpacingExtra": "3.3sp",
+                        "text": "@{fn:format('Rs. %s',@{fn:number(@{item.roi})})}",
+                        "textColor": "#000759",
+                        "textSize": "13sp"
+                    }]
                 }]
             }]
         }, {

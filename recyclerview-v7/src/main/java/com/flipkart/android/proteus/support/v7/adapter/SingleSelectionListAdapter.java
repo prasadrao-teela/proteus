@@ -8,6 +8,7 @@ import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.value.Array;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
@@ -23,8 +24,8 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
     private static final String ATTRIBUTE_ITEM_LAYOUT = "item-layout";
     private static final String ATTRIBUTE_ITEM_COUNT = "item-count";
     private static final String ATTRIBUTE_ITEMS = "items";
-
-    private int checkedPosition = -1;
+    private static final String ATTRIBUTE_ITEM = "item";
+    private static final String ATTRIBUTE_SELECTED = "selected";
 
     public static final Builder<SingleSelectionListAdapter> BUILDER = (view, config) -> {
         Layout layout = config.getAsObject().getAsLayout(ATTRIBUTE_ITEM_LAYOUT);
@@ -46,6 +47,7 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
 
     private SingleSelectionListAdapter(ProteusLayoutInflater inflater, ObjectValue data,
         Layout layout, int count) {
+        System.out.println("debug: ========== SingleSelectionListAdapter ===============");
         this.inflater = inflater;
         this.data = data;
         this.count = count;
@@ -63,15 +65,24 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
     @Override
     public void onBindViewHolder(ProteusViewHolder holder, int position) {
         DataContext context = DataContext.create(holder.context, data, position, scope);
-        holder.view.getViewManager().update(context.getData());
-        holder.view.getAsView().setSelected(checkedPosition == position);
-        holder.view.getAsView().setOnClickListener(v -> {
-            if (checkedPosition != position) {
+        ObjectValue data = context.getData();
+        holder.view.getViewManager().update(data);
+        ObjectValue item = data.getAsObject(ATTRIBUTE_ITEM);
+        if (item != null) {
+            Boolean selected = item.getAsBoolean(ATTRIBUTE_SELECTED);
+            holder.view.getAsView().setSelected(selected != null && selected);
+            holder.view.getAsView().setOnClickListener(v -> {
+                Array items = this.data.getAsArray(ATTRIBUTE_ITEMS);
+                for (int i = 0; i < items.size(); i++) {
+                    items.get(i).getAsObject().addProperty(ATTRIBUTE_SELECTED, i == position);
+                }
                 notifyDataSetChanged();
-                checkedPosition = position;
-                System.out.println("============> "+getSelectedItem());
-            }
-        });
+
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(holder.view, item, position);
+                }
+            });
+        }
     }
 
     @Override
@@ -80,6 +91,13 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
     }
 
     public ObjectValue getSelectedItem() {
-        return data.get(ATTRIBUTE_ITEMS).getAsArray().get(checkedPosition).getAsObject();
+        System.out.println("debug: SingleSelectionListAdapter: " + data);
+        Array items = this.data.getAsArray(ATTRIBUTE_ITEMS);
+        for (int i = 0; i < items.size(); i++) {
+            ObjectValue item = items.get(i).getAsObject();
+            Boolean selected = item.getAsBoolean(ATTRIBUTE_SELECTED);
+            if (selected != null && selected) return item.getAsObject(ATTRIBUTE_ITEM);
+        }
+        return null;
     }
 }

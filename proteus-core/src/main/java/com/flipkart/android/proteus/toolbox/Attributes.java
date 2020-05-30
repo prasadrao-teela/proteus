@@ -89,6 +89,7 @@ public class Attributes {
         public static final String NextFocusRight = "nextFocusRight";
         public static final String NextFocusUp = "nextFocusUp";
         public static final String OnClick = "onClick";
+        public static final String onProgressChanged = "onProgressChanged";
         public static final String OnLongClick = "onLongClick";
         public static final String OnTouch = "onTouch";
         public static final String Padding = "padding";

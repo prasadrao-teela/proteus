@@ -23,12 +23,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.appcompat.widget.Toolbar;
 
 import com.flipkart.android.proteus.LayoutManager;
@@ -38,17 +40,25 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.StyleManager;
 import com.flipkart.android.proteus.Styles;
 import com.flipkart.android.proteus.demo.api.ProteusManager;
-import com.flipkart.android.proteus.demo.events.EventHandler;
 import com.flipkart.android.proteus.demo.utils.GlideApp;
 import com.flipkart.android.proteus.demo.utils.ImageLoaderTarget;
 import com.flipkart.android.proteus.exceptions.ProteusInflateException;
+import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
+import com.flipkart.android.proteus.support.v7.adapter.SingleSelectionListAdapter;
+import com.flipkart.android.proteus.support.v7.widget.ProteusRecyclerView;
+import com.flipkart.android.proteus.value.Array;
 import com.flipkart.android.proteus.value.DrawableValue;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.DecimalFormat;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProteusActivity extends AppCompatActivity implements ProteusManager.Listener {
 
@@ -112,18 +122,132 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
         public void onEvent(String event, Value value, ProteusView view) {
             Log.i("ProteusEvent", value.toString());
 
-            System.out.println("========> "+view.getViewManager().getLayout().attributes);
-            String[] events = value.toString().split("->");
-            for (String eventHandlers : events) {
-                EventHandler eventHandler = EventHandler.getEventHandler(eventHandlers);
-                boolean result = eventHandler.handle((ProteusView) view.getAsView().getParent());
-                if (!result) {
-                    System.out.println("============> "+eventHandlers + " failed!");
-                    break;
-                }
+            if ("onTenureSelected".equals(value.getAsString())) {
+                Value item = view.getViewManager().getDataContext().getData().get("item");
+                System.out.println("debug: item: " + item);
+                //                updateRootData(item);
+                updateSelectedView(item);
+
+                //                ProteusView layoutEmiDetails =
+                //                    (ProteusView) ProteusActivity.this.view.getViewManager()
+                //                        .findViewById("layoutEmiDetails");
+                //                System.out.println("debug: onListItemClick: " +
+                //                    layoutEmiDetails.getViewManager().getDataContext().getData());
+                //                ObjectValue item = view.getViewManager().getDataContext()
+                //                .getData();
+                //                System.out.println("debug: ProteusActivity: " + item);
+                //                layoutEmiDetails.getViewManager().update(item.getAsObject
+                //                ("item"));
+                ////                layoutEmiDetails.getViewManager().update(item);
+                //
+                //                System.out.println(layoutEmiDetails.getViewManager()
+                //                .getDataContext().getData());
+                //
+                //                ProteusView.Manager viewManager = ProteusActivity.this.view
+                //                .getViewManager();
+                //                ObjectValue data = viewManager.getDataContext().getData();
+                //                data.add("emiDetails", data);
+                //                System.out.println("debug: ProteusActivity: " + data);
+                //
+                //                viewManager.update(data);
+                return;
             }
+
+            if ("onLoanAmountChanged".equalsIgnoreCase(value.getAsString())) {
+                String amount = new DecimalFormat("#,##,###").format(
+                    (((AppCompatSeekBar) view).getProgress() + 1) * 1000);
+
+                TextView textRequiredLoanAmount =
+                    (TextView) ProteusActivity.this.view.getViewManager()
+                        .findViewById("textRequiredLoanAmount");
+                if (textRequiredLoanAmount != null) {
+                    textRequiredLoanAmount.setText(String.format("Rs. %s", amount));
+                }
+                proteusManager.getApi().getUserData().enqueue(new Callback<ObjectValue>() {
+                    @Override
+                    public void onResponse(Call<ObjectValue> call, Response<ObjectValue> response) {
+                        //                        ProteusView.Manager viewManager =
+                        //                            ProteusActivity.this.view.getViewManager();
+                        //                        ObjectValue data = viewManager.getDataContext()
+                        //                        .getData();
+                        //                        System.out.println("debug: ProteusActivity: " +
+                        //                        data);
+                        //                        viewManager.update(response.body());
+                        Value updated = response.body().get("emiDetailsList");
+                        System.out.println("debug: updated tenures: " + updated);
+                        //                updateRootData(item);
+                        updateTenureList(updated);
+                    }
+
+                    @Override
+                    public void onFailure(Call<ObjectValue> call, Throwable t) {
+
+                    }
+                });
+            }
+
+            //            System.out.println("========> "+view.getViewManager().getLayout()
+            //            .attributes);
+            //            String[] events = value.toString().split("->");
+            //            for (String eventHandlers : events) {
+            //                EventHandler eventHandler = EventHandler.getEventHandler
+            //                (eventHandlers);
+            //                boolean result = eventHandler.handle((ProteusView) view.getAsView()
+            //                .getParent());
+            //                if (!result) {
+            //                    System.out.println("============> "+eventHandlers + " failed!");
+            //                    break;
+            //                }
+            //            }
         }
     };
+
+    private void updateTenureList(Value updated) {
+        ProteusRecyclerView layoutEmiDetails =
+            (ProteusRecyclerView) this.view.getViewManager().findViewById("listViewTenure");
+
+        if (layoutEmiDetails == null) return;
+        ProteusRecyclerViewAdapter<?> adapter =
+            (ProteusRecyclerViewAdapter<?>) layoutEmiDetails.getAdapter();
+
+        if (adapter == null) return;
+        ProteusRecyclerViewAdapter.OnItemClickListener onItemClickListener =
+            adapter.getOnItemClickListener();
+        ProteusView.Manager viewManager = layoutEmiDetails.getViewManager();
+        ObjectValue data = viewManager.getDataContext().getData();
+        System.out.println("debug: listViewTenure: " + data);
+        data.add("emiDetailsList", updated);
+        viewManager.update(data);
+        adapter = (ProteusRecyclerViewAdapter<?>) layoutEmiDetails.getAdapter();
+        adapter.setOnItemClickListener(onItemClickListener);
+        Array emiList = updated.getAsArray();
+        for (int i = 0; i < emiList.size(); i++) {
+            ObjectValue emi = emiList.get(i).getAsObject();
+            Boolean selected = emi.getAsBoolean("selected");
+            if (selected != null && selected) {
+                updateSelectedView(emi);
+                break;
+            }
+        }
+    }
+
+    private void updateSelectedView(Value updated) {
+        ProteusView layoutEmiDetails =
+            (ProteusView) this.view.getViewManager().findViewById("layoutEmiDetails");
+        ProteusView.Manager viewManager = layoutEmiDetails.getViewManager();
+        ObjectValue data = viewManager.getDataContext().getData();
+        System.out.println("debug: layoutEmiDetails: " + data);
+        data.add("emiDetails", updated);
+        viewManager.update(data);
+    }
+
+    private void updateRootData(Value updated) {
+        ProteusView.Manager viewManager = this.view.getViewManager();
+        ObjectValue data = viewManager.getDataContext().getData();
+        data.add("emiDetails", updated);
+        data.add("item", updated);
+        viewManager.update(data);
+    }
 
     ProteusView view;
     private ViewGroup container;
