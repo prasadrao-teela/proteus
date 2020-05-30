@@ -215,7 +215,6 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
             adapter.getOnItemClickListener();
         ProteusView.Manager viewManager = layoutEmiDetails.getViewManager();
         ObjectValue data = viewManager.getDataContext().getData();
-        System.out.println("debug: listViewTenure: " + data);
         data.add("emiDetailsList", updated);
         viewManager.update(data);
         adapter = (ProteusRecyclerViewAdapter<?>) layoutEmiDetails.getAdapter();
