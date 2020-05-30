@@ -8,11 +8,14 @@ import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.value.Array;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -82,5 +85,17 @@ public class MultiSelectionListAdapter extends ProteusRecyclerViewAdapter<Proteu
             if (b) return true;
         }
         return false;
+    }
+
+    public ObjectValue[] getSelectedItems() {
+        List<ObjectValue> list = new ArrayList<>();
+        Array array = data.get(ATTRIBUTE_ITEMS).getAsArray();
+        for (int i = 0; i < count; i++) {
+            if (itemsSelected[i]) {
+                list.add(array.get(i).getAsObject());
+            }
+        }
+        ObjectValue[] selectedItems = new ObjectValue[list.size()];
+        return list.toArray(selectedItems);
     }
 }

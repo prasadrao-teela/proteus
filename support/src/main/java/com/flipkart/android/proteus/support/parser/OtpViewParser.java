@@ -12,12 +12,15 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
+import com.flipkart.android.proteus.processor.EventProcessor;
 import com.flipkart.android.proteus.processor.NumberAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.support.view.ProteusOtpView;
 import com.flipkart.android.proteus.support.view.custom.OtpEntryEditText;
+import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
+import com.flipkart.android.proteus.value.Value;
 
 /**
  * Created by Prasad Rao on 30-04-2020 15:43
@@ -74,6 +77,13 @@ public class OtpViewParser<V extends OtpEntryEditText> extends ViewTypeParser<V>
             @Override
             public void setString(V view, String value) {
                 view.setViewType(value);
+            }
+        });
+
+        addAttributeProcessor(Attributes.EditText.onOtpCompleted,  new EventProcessor<V>() {
+            @Override
+            public void setOnEventListener(final V view, final Value value) {
+                view.setOtpCompletionListener(otp -> trigger(Attributes.EditText.onOtpCompleted, value, (ProteusView) view));
             }
         });
     }

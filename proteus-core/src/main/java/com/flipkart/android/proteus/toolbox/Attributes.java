@@ -177,6 +177,12 @@ public class Attributes {
     public static final class EditText {
         public static final String maxLength = "maxLength";
         public static final String valueRange = "valueRange";
+        public static final String inputType = "inputType";
+        public static final String nextAutoFocus = "nextAutoFocus"; //value are down, right,left and up
+        public static final String enableShowPassword = "enableShowPassword";
+        public static final String showPasswordDrawable = "showPasswordDrawable";
+        public static final String hidePasswordDrawable = "hidePasswordDrawable";
+        public static final String onOtpCompleted = "onOtpCompleted";
 
         private EditText() {}
     }
