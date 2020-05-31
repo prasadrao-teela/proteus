@@ -89,7 +89,6 @@ public class Attributes {
         public static final String NextFocusRight = "nextFocusRight";
         public static final String NextFocusUp = "nextFocusUp";
         public static final String OnClick = "onClick";
-        public static final String onProgressChanged = "onProgressChanged";
         public static final String OnLongClick = "onLongClick";
         public static final String OnTouch = "onTouch";
         public static final String Padding = "padding";
@@ -178,7 +177,8 @@ public class Attributes {
         public static final String maxLength = "maxLength";
         public static final String valueRange = "valueRange";
         public static final String inputType = "inputType";
-        public static final String nextAutoFocus = "nextAutoFocus"; //value are down, right,left and up
+        public static final String nextAutoFocus = "nextAutoFocus";
+            //value are down, right,left and up
         public static final String enableShowPassword = "enableShowPassword";
         public static final String showPasswordDrawable = "showPasswordDrawable";
         public static final String hidePasswordDrawable = "hidePasswordDrawable";
@@ -244,6 +244,10 @@ public class Attributes {
         public static final String progressDrawable = "progressDrawable";
         public static final String thumb = "thumb";
         public static final String thumbOffset = "thumbOffset";
+        public static final String onProgressChanged = "onProgressChanged";
+        public static final String onProgressEnded = "onProgressEnded";
+        public static final String stepSize = "stepSize";
+        public static final String min = "min";
     }
 
     public static final class LottieAnimationView {

@@ -44,8 +44,8 @@ import com.flipkart.android.proteus.demo.utils.GlideApp;
 import com.flipkart.android.proteus.demo.utils.ImageLoaderTarget;
 import com.flipkart.android.proteus.exceptions.ProteusInflateException;
 import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
-import com.flipkart.android.proteus.support.v7.adapter.SingleSelectionListAdapter;
 import com.flipkart.android.proteus.support.v7.widget.ProteusRecyclerView;
+import com.flipkart.android.proteus.support.view.ProteusSeekBar;
 import com.flipkart.android.proteus.value.Array;
 import com.flipkart.android.proteus.value.DrawableValue;
 import com.flipkart.android.proteus.value.Layout;
@@ -122,7 +122,21 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
         public void onEvent(String event, Value value, ProteusView view) {
             Log.i("ProteusEvent", value.toString());
 
-            if ("onTenureSelected".equals(value.getAsString())) {
+            if ("updateLoanAmountText".equals(value.getAsString())) {
+                int min = ((ProteusSeekBar) view).getMinValue();
+                int stepSize = ((ProteusSeekBar) view).getStepSize();
+                System.out.println("debug: onLoanAmountChanged: min = " + min);
+
+                String amount = new DecimalFormat("#,##,###").format(
+                    ((AppCompatSeekBar) view).getProgress() * stepSize + min);
+
+                TextView textRequiredLoanAmount =
+                    (TextView) ProteusActivity.this.view.getViewManager()
+                        .findViewById("textRequiredLoanAmount");
+                if (textRequiredLoanAmount != null) {
+                    textRequiredLoanAmount.setText(String.format("Rs. %s", amount));
+                }
+            } else if ("onTenureSelected".equals(value.getAsString())) {
                 Value item = view.getViewManager().getDataContext().getData().get("item");
                 System.out.println("debug: item: " + item);
                 //                updateRootData(item);
@@ -153,16 +167,8 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
                 return;
             }
 
-            if ("onLoanAmountChanged".equalsIgnoreCase(value.getAsString())) {
-                String amount = new DecimalFormat("#,##,###").format(
-                    (((AppCompatSeekBar) view).getProgress() + 1) * 1000);
+            if ("updateTenureList".equalsIgnoreCase(value.getAsString())) {
 
-                TextView textRequiredLoanAmount =
-                    (TextView) ProteusActivity.this.view.getViewManager()
-                        .findViewById("textRequiredLoanAmount");
-                if (textRequiredLoanAmount != null) {
-                    textRequiredLoanAmount.setText(String.format("Rs. %s", amount));
-                }
                 proteusManager.getApi().getUserData().enqueue(new Callback<ObjectValue>() {
                     @Override
                     public void onResponse(Call<ObjectValue> call, Response<ObjectValue> response) {

@@ -25,6 +25,9 @@ import com.flipkart.android.proteus.value.Value;
  * Created by Prasad Rao on 07-05-2020 22:26
  **/
 public class SeekBarParser<V extends AppCompatSeekBar> extends ViewTypeParser<V> {
+
+    private SeekBarChangeListener seekBarChangeListener;
+
     @NonNull
     @Override
     public String getType() {
@@ -68,39 +71,91 @@ public class SeekBarParser<V extends AppCompatSeekBar> extends ViewTypeParser<V>
             }
         });
 
-        addAttributeProcessor(Attributes.View.onProgressChanged, new EventProcessor<V>() {
+        addAttributeProcessor(Attributes.SeekBar.onProgressChanged, new EventProcessor<V>() {
             @Override
             public void setOnEventListener(final V view, final Value value) {
-                view.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                        trigger(Attributes.View.onProgressChanged, value, (ProteusView) view);
-                    }
-                });
+                SeekBarChangeListener seekBarChangeListener =
+                    getSeekBarChangeListener().setEventProcessor(this)
+                        .setProgressChangeValue(value)
+                        .setView((ProteusView) view);
+                view.setOnSeekBarChangeListener(seekBarChangeListener);
             }
         });
 
-        addAttributeProcessor("min", new NumberAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.SeekBar.onProgressEnded, new EventProcessor<V>() {
             @Override
-            public void setNumber(V view, @NonNull Number value) {
-                ((ProteusSeekBar)view).setMinValue(value.intValue());
+            public void setOnEventListener(final V view, final Value value) {
+                SeekBarChangeListener seekBarChangeListener =
+                    getSeekBarChangeListener().setEventProcessor(this)
+                        .setProgressEndValue(value)
+                        .setView((ProteusView) view);
+                view.setOnSeekBarChangeListener(seekBarChangeListener);
             }
         });
 
-        addAttributeProcessor("stepSize", new NumberAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.SeekBar.min, new NumberAttributeProcessor<V>() {
             @Override
             public void setNumber(V view, @NonNull Number value) {
-                ((ProteusSeekBar)view).setStepSize(value.intValue());
+                ((ProteusSeekBar) view).setMinValue(value.intValue());
+            }
+        });
+
+        addAttributeProcessor(Attributes.SeekBar.stepSize, new NumberAttributeProcessor<V>() {
+            @Override
+            public void setNumber(V view, @NonNull Number value) {
+                ((ProteusSeekBar) view).setStepSize(value.intValue());
             }
         });
     }
+
+    public SeekBarChangeListener getSeekBarChangeListener() {
+        if (seekBarChangeListener == null) {
+            seekBarChangeListener = new SeekBarChangeListener();
+        }
+        return seekBarChangeListener;
+    }
+
+    private class SeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
+
+        private Value progressChangeValue;
+        private Value progressEndValue;
+        private ProteusView view;
+        private EventProcessor<V> eventProcessor;
+
+        public SeekBarChangeListener setEventProcessor(EventProcessor<V> eventProcessor) {
+            this.eventProcessor = eventProcessor;
+            return this;
+        }
+
+        public SeekBarChangeListener setProgressChangeValue(Value progressChangeValue) {
+            this.progressChangeValue = progressChangeValue;
+            return this;
+        }
+
+        public SeekBarChangeListener setProgressEndValue(Value progressEndValue) {
+            this.progressEndValue = progressEndValue;
+            return this;
+        }
+
+        public SeekBarChangeListener setView(ProteusView view) {
+            this.view = view;
+            return this;
+        }
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            eventProcessor.trigger(Attributes.SeekBar.onProgressChanged, progressChangeValue, view);
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            eventProcessor.trigger(Attributes.SeekBar.onProgressEnded, progressEndValue, view);
+        }
+    }
 }
+

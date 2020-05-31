@@ -34,7 +34,7 @@
             "id": "textRequiredLoanAmount",
             "fontFamily": "fonts/rubik_medium.ttf",
             "lineSpacingExtra": "3.3sp",
-            "text": "Rs. 80,000",
+            "text": "@{fn:format('Rs. %s',@{fn:number(@{offerAmount})})}",
             "layout_marginTop": "6dp",
             "textColor": "#2d3566",
             "textSize": "22sp"
@@ -47,9 +47,13 @@
             "thumbOffset": "-2dp",
             "paddingStart": "0dp",
             "paddingEnd": "0dp",
-            "max": "149",
+            "max": "@{maxProgress}",
+            "stepSize":"@{stepSize}",
+            "progress":"@{maxProgress}",
+            "min": "@{minOfferAmount}",
             "layout_marginTop": "24dp",
-            "onProgressChanged": "onLoanAmountChanged"
+            "onProgressChanged": "updateLoanAmountText",
+            "onProgressEnded": "updateTenureList"
         }, {
             "type": "LinearLayout",
             "layout_width": "match_parent",
@@ -63,7 +67,7 @@
                 "layout_weight": "1",
                 "fontFamily": "fonts/rubik_regular.ttf",
                 "lineSpacingExtra": "3.3sp",
-                "text": "Rs. 5000",
+                "text": "@{fn:format('Rs. %s',@{fn:number(@{minOfferAmount})})}",
                 "textColor": "#5e6aa0",
                 "textSize": "12sp"
             }, {
@@ -73,7 +77,7 @@
                 "layout_weight": "1",
                 "fontFamily": "fonts/rubik_regular.ttf",
                 "lineSpacingExtra": "3.3sp",
-                "text": "Rs. 1.5L",
+                "text": "@{fn:format('Rs. %s',@{fn:number(@{offerAmount})})}",
                 "textColor": "#5e6aa0",
                 "gravity": "end",
                 "textSize": "12sp"
@@ -233,7 +237,7 @@
                         "layout_weight": "1",
                         "fontFamily": "fonts/rubik_medium.ttf",
                         "lineSpacingExtra": "3.3sp",
-                        "text": "@{emiDetails.repaymentDate}",
+                        "text": "5th of every month",
                         "textColor": "#000759",
                         "textSize": "13sp"
                     }]
