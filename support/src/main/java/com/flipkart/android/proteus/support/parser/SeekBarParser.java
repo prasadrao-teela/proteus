@@ -14,6 +14,7 @@ import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.EventProcessor;
+import com.flipkart.android.proteus.processor.NumberAttributeProcessor;
 import com.flipkart.android.proteus.support.view.ProteusSeekBar;
 import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.value.Layout;
@@ -85,6 +86,20 @@ public class SeekBarParser<V extends AppCompatSeekBar> extends ViewTypeParser<V>
                         trigger(Attributes.View.onProgressChanged, value, (ProteusView) view);
                     }
                 });
+            }
+        });
+
+        addAttributeProcessor("min", new NumberAttributeProcessor<V>() {
+            @Override
+            public void setNumber(V view, @NonNull Number value) {
+                ((ProteusSeekBar)view).setMinValue(value.intValue());
+            }
+        });
+
+        addAttributeProcessor("stepSize", new NumberAttributeProcessor<V>() {
+            @Override
+            public void setNumber(V view, @NonNull Number value) {
+                ((ProteusSeekBar)view).setStepSize(value.intValue());
             }
         });
     }

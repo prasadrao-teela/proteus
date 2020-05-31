@@ -13,6 +13,10 @@ import com.flipkart.android.proteus.ProteusView;
  **/
 public class ProteusSeekBar extends AppCompatSeekBar implements ProteusView {
 
+    private int minValue;
+
+    private int stepSize;
+
     private Manager manager;
 
     public ProteusSeekBar(Context context) {
@@ -33,5 +37,21 @@ public class ProteusSeekBar extends AppCompatSeekBar implements ProteusView {
     @Override
     public View getAsView() {
         return this;
+    }
+
+    public int getMinValue() {
+        return minValue;
+    }
+
+    public void setMinValue(int minValue) {
+        this.minValue = minValue;
+    }
+
+    public int getStepSize() {
+        return stepSize;
+    }
+
+    public void setStepSize(int stepSize) {
+        this.stepSize = stepSize;
     }
 }
