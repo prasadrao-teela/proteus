@@ -110,4 +110,10 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
         }
         return null;
     }
+
+    public void updateData(Array data) {
+        this.data.add(ATTRIBUTE_ITEMS, data);
+        count = data.size();
+        notifyDataSetChanged();
+    }
 }

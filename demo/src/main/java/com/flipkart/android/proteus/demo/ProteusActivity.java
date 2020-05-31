@@ -44,6 +44,7 @@ import com.flipkart.android.proteus.demo.utils.GlideApp;
 import com.flipkart.android.proteus.demo.utils.ImageLoaderTarget;
 import com.flipkart.android.proteus.exceptions.ProteusInflateException;
 import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
+import com.flipkart.android.proteus.support.v7.adapter.SingleSelectionListAdapter;
 import com.flipkart.android.proteus.support.v7.widget.ProteusRecyclerView;
 import com.flipkart.android.proteus.support.view.ProteusSeekBar;
 import com.flipkart.android.proteus.value.Array;
@@ -213,19 +214,12 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
             (ProteusRecyclerView) this.view.getViewManager().findViewById("listViewTenure");
 
         if (layoutEmiDetails == null) return;
-        ProteusRecyclerViewAdapter<?> adapter =
-            (ProteusRecyclerViewAdapter<?>) layoutEmiDetails.getAdapter();
+        SingleSelectionListAdapter adapter =
+            (SingleSelectionListAdapter) layoutEmiDetails.getAdapter();
 
         if (adapter == null) return;
-        ProteusRecyclerViewAdapter.OnItemClickListener onItemClickListener =
-            adapter.getOnItemClickListener();
-        ProteusView.Manager viewManager = layoutEmiDetails.getViewManager();
-        ObjectValue data = viewManager.getDataContext().getData();
-        data.add("emiDetailsList", updated);
-        viewManager.update(data);
-        adapter = (ProteusRecyclerViewAdapter<?>) layoutEmiDetails.getAdapter();
-        adapter.setOnItemClickListener(onItemClickListener);
         Array emiList = updated.getAsArray();
+        adapter.updateData(emiList);
         for (int i = 0; i < emiList.size(); i++) {
             ObjectValue emi = emiList.get(i).getAsObject();
             Boolean selected = emi.getAsBoolean("selected");
