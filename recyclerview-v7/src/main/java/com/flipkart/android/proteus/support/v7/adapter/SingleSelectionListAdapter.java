@@ -106,7 +106,7 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
         for (int i = 0; i < items.size(); i++) {
             ObjectValue item = items.get(i).getAsObject();
             Boolean selected = item.getAsBoolean(ATTRIBUTE_SELECTED);
-            if (selected != null && selected) return item.getAsObject(ATTRIBUTE_ITEM);
+            if (selected != null && selected) return item;
         }
         return null;
     }
