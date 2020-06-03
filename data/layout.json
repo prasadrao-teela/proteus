@@ -7,302 +7,287 @@
         "layout_width": "match_parent",
         "layout_height": "wrap_content",
         "orientation": "vertical",
-        "padding": "24dp",
+        "padding": "16dp",
         "children": [{
-            "type": "TextView",
-            "layout_width": "wrap_content",
-            "layout_height": "wrap_content",
-            "fontFamily": "fonts/rubik_regular.ttf",
-            "lineSpacingExtra": "3.3sp",
-            "text": "Source(s) of Income",
-            "textColor": "#000759",
-            "textSize": "22sp"
-        }, {
-            "type": "TextView",
-            "layout_width": "wrap_content",
-            "layout_height": "wrap_content",
-            "fontFamily": "fonts/rubik_regular.ttf",
-            "lineSpacingExtra": "3.3sp",
-            "text": "Required Loan Amount",
-            "layout_marginTop": "16dp",
-            "textColor": "#6f7f9f",
-            "textSize": "12sp"
-        }, {
-            "type": "TextView",
-            "layout_width": "wrap_content",
-            "layout_height": "wrap_content",
-            "id": "textRequiredLoanAmount",
-            "fontFamily": "fonts/rubik_medium.ttf",
-            "lineSpacingExtra": "3.3sp",
-            "text": "@{fn:format('Rs. %s',@{fn:number(@{offerAmount})})}",
-            "layout_marginTop": "6dp",
-            "textColor": "#2d3566",
-            "textSize": "22sp"
-        }, {
-            "type": "AppCompatSeekBar",
-            "layout_width": "match_parent",
-            "layout_height": "wrap_content",
-            "progressDrawable": "@drawable/seekbar",
-            "thumb": "@drawable/thumb_drawable",
-            "thumbOffset": "-2dp",
-            "paddingStart": "0dp",
-            "paddingEnd": "0dp",
-            "max": "@{maxProgress}",
-            "stepSize":"@{stepSize}",
-            "progress":"@{maxProgress}",
-            "min": "@{minOfferAmount}",
-            "layout_marginTop": "24dp",
-            "onProgressChanged": "updateLoanAmountText",
-            "onProgressEnded": "updateTenureList"
-        }, {
             "type": "LinearLayout",
             "layout_width": "match_parent",
             "layout_height": "wrap_content",
             "orientation": "horizontal",
-            "layout_marginTop": "6dp",
+            "gravity": "center",
+            "layout_marginTop": "36dp",
             "children": [{
                 "type": "TextView",
                 "layout_width": "0dp",
+                "layout_weight": "0.2",
                 "layout_height": "wrap_content",
-                "layout_weight": "1",
+                "textSize": "22sp",
+                "textColor": "#000759",
+                "lineSpacingExtra": "9sp",
+                "layout_marginLeft": "8dp",
                 "fontFamily": "fonts/rubik_regular.ttf",
-                "lineSpacingExtra": "3.3sp",
-                "text": "@{fn:format('Rs. %s',@{fn:number(@{minOfferAmount})})}",
-                "textColor": "#5e6aa0",
-                "textSize": "12sp"
+                "text": "Search IFSC"
             }, {
                 "type": "TextView",
                 "layout_width": "0dp",
+                "layout_weight": "0.1",
                 "layout_height": "wrap_content",
-                "layout_weight": "1",
-                "fontFamily": "fonts/rubik_regular.ttf",
-                "lineSpacingExtra": "3.3sp",
-                "text": "@{fn:format('Rs. %s',@{fn:number(@{offerAmount})})}",
-                "textColor": "#5e6aa0",
-                "gravity": "end",
-                "textSize": "12sp"
+                "textSize": "16sp",
+                "textColor": "#4d6cd9",
+                "lineSpacingExtra": "9sp",
+                "layout_marginRight": "8dp",
+                "paddingStart": "8dp",
+                "paddingEnd": "8dp",
+                "paddingTop": "4dp",
+                "paddingBottom": "4dp",
+                "textAllCaps": "true",
+                "gravity": "center",
+                "fontFamily": "fonts/rubik_medium.ttf",
+                "background": {
+                    "type": "shape",
+                    "shape": "rectangle",
+                    "children": [{
+                        "type": "solid",
+                        "color": "#264d6cd9"
+                    }, {
+                        "type": "corners",
+                        "radius": "16dp"
+                    }]
+                },
+                "text": "Close"
             }]
         }, {
             "type": "TextView",
             "layout_width": "wrap_content",
             "layout_height": "wrap_content",
-            "fontFamily": "fonts/rubik_regular.ttf",
-            "lineSpacingExtra": "3.3sp",
-            "text": "Loan Tenure (Months)",
-            "layout_marginTop": "24dp",
-            "textColor": "#5e6aa0",
-            "textSize": "16sp"
+            "textSize": "12sp",
+            "textColor": "#99a1c5",
+            "lineSpacingExtra": "9sp",
+            "layout_marginLeft": "8dp",
+            "layout_marginRight": "8dp",
+            "layout_marginTop": "8dp",
+            "fontFamily": "fonts/rubik_medium.ttf",
+            "textAllCaps": "true",
+            "text": "Select Bank"
         }, {
-            "type": "RecyclerView",
+            "type": "AppCompatSpinner",
             "layout_width": "match_parent",
             "layout_height": "wrap_content",
-            "id": "listViewTenure",
-            "itemMargin": "6dp",
-            "validationRequired": true,
+            "background": "@drawable/spinner_bg",
+            "layout_marginLeft": "8dp",
+            "layout_marginRight": "8dp",
+            "id":"spinnerBankSelection",
+            "layout_marginTop": "5dp",
             "data": {
-                "items": "@{emiDetailsList}"
-            },
-            "layout_manager": {
-                "type": "GridLayoutManager",
-                "orientation": 0,
-                "spanCount": 1
+                "items": "@{resultList}"
             },
             "adapter": {
                 "@": {
-                    "type": "SingleSelectionListAdapter",
+                    "type": "SimpleSpinnerAdapter",
                     "item-count": "@{items.$length}",
                     "item-layout": {
                         "type": "LinearLayout",
-                        "layout_width": "wrap_content",
+                        "layout_width": "match_parent",
                         "layout_height": "wrap_content",
                         "data": {
                             "item": "@{items[$index]}"
                         },
-                        "background": "@drawable/selectable_bg_border_filled",
-                        "gravity": "center",
-                        "orientation": "vertical",
                         "children": [{
                             "type": "TextView",
                             "layout_width": "wrap_content",
                             "layout_height": "wrap_content",
-                            "id": "labelIncomeSource",
                             "fontFamily": "fonts/rubik_medium.ttf",
-                            "gravity": "center",
                             "lineSpacingExtra": "2.3sp",
-                            "paddingStart": "16dp",
-                            "paddingEnd": "16dp",
-                            "paddingTop": "48dp",
-                            "paddingBottom": "8dp",
-                            "text": "@{item.label}",
-                            "textColor": "@color/selectable_text_color",
+                            "padding": "16dp",
+                            "text": "@{item.bankName}",
+                            "textColor": "@color/colorSelectedDark",
                             "textSize": "16sp"
                         }]
                     }
                 }
             },
-            "onListItemSelected": "onTenureSelected"
+            "onSpinnerItemSelected": "updateStateList"
         }, {
-            "type": "LinearLayout",
+            "type": "TextView",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "textSize": "12sp",
+            "textColor": "#99a1c5",
+            "lineSpacingExtra": "9sp",
+            "layout_marginLeft": "8dp",
+            "layout_marginRight": "8dp",
+            "layout_marginTop": "48dp",
+            "fontFamily": "fonts/rubik_medium.ttf",
+            "textAllCaps": "true",
+            "text": "SELECT STATE"
+        }, {
+            "type": "AppCompatSpinner",
             "layout_width": "match_parent",
             "layout_height": "wrap_content",
-            "id": "layoutEmiDetails",
+            "background": "@drawable/spinner_bg",
+            "layout_marginLeft": "8dp",
+            "layout_marginRight": "8dp",
+            "layout_marginTop": "5dp",
+            "id":"spinnerStateSelection",
             "data": {
-                "item": "@{emiDetails}"
+                "items": "@{state}"
             },
-            "orientation": "vertical",
-            "children": [{
-                "type": "LinearLayout",
-                "layout_width": "match_parent",
-                "layout_height": "wrap_content",
-                "orientation": "horizontal",
-                "layout_marginTop": "32dp",
-                "children": [{
-                    "type": "TextView",
-                    "layout_width": "0dp",
-                    "layout_height": "wrap_content",
-                    "id": "textRepaymentAmount",
-                    "layout_weight": "1",
-                    "fontFamily": "fonts/rubik_medium.ttf",
-                    "lineSpacingExtra": "3.3sp",
-                    "text": "@{fn:format('Rs. %s',@{fn:number(@{item.emi})})}",
-                    "textColor": "#000759",
-                    "textSize": "16sp"
-                }, {
-                    "type": "TextView",
-                    "layout_width": "0dp",
-                    "layout_height": "wrap_content",
-                    "id": "textRateOfInterest",
-                    "layout_weight": "1",
-                    "fontFamily": "fonts/rubik_medium.ttf",
-                    "lineSpacingExtra": "3.3sp",
-                    "text": "@{fn:format('%s%%',@{item.roi})}",
-                    "textColor": "#000759",
-                    "textSize": "16sp"
-                }]
-            }, {
-                "type": "LinearLayout",
-                "layout_width": "match_parent",
-                "layout_height": "wrap_content",
-                "orientation": "horizontal",
-                "layout_marginTop": "8dp",
-                "children": [{
-                    "type": "TextView",
-                    "layout_width": "0dp",
-                    "layout_height": "wrap_content",
-                    "layout_weight": "1",
-                    "fontFamily": "fonts/rubik_medium.ttf",
-                    "lineSpacingExtra": "3.3sp",
-                    "text": "Repayment Amount",
-                    "textColor": "#99a1c5",
-                    "textSize": "13sp"
-                }, {
-                    "type": "TextView",
-                    "layout_width": "0dp",
-                    "layout_height": "wrap_content",
-                    "layout_weight": "1",
-                    "fontFamily": "fonts/rubik_medium.ttf",
-                    "lineSpacingExtra": "3.3sp",
-                    "text": "Monthly Interest",
-                    "textColor": "#99a1c5",
-                    "textSize": "13sp"
-                }]
-            }, {
-                "type": "LinearLayout",
-                "layout_width": "match_parent",
-                "layout_height": "wrap_content",
-                "orientation": "vertical",
-                "layout_marginTop": "8dp",
-                "background": "#f4f8ff",
-                "padding": "16dp",
-                "children": [{
-                    "type": "LinearLayout",
-                    "layout_width": "match_parent",
-                    "layout_height": "wrap_content",
-                    "orientation": "horizontal",
-                    "layout_marginTop": "8dp",
-                    "children": [{
-                        "type": "TextView",
-                        "layout_width": "0dp",
+            "adapter": {
+                "@": {
+                    "type": "SimpleSpinnerAdapter",
+                    "item-count": "@{items.$length}",
+                    "item-layout": {
+                        "type": "LinearLayout",
+                        "layout_width": "match_parent",
                         "layout_height": "wrap_content",
-                        "layout_weight": "1",
-                        "fontFamily": "fonts/rubik_medium.ttf",
-                        "lineSpacingExtra": "3.3sp",
-                        "text": "Repayment Date",
-                        "textColor": "#6f7f9f",
-                        "textSize": "13sp"
-                    }, {
-                        "type": "TextView",
-                        "layout_width": "0dp",
+                        "data": {
+                            "item": "@{items[$index]}"
+                        },
+                        "children": [{
+                            "type": "TextView",
+                            "layout_width": "wrap_content",
+                            "layout_height": "wrap_content",
+                            "fontFamily": "fonts/rubik_medium.ttf",
+                            "lineSpacingExtra": "2.3sp",
+                            "padding": "16dp",
+                            "text": "@{item}",
+                            "textColor": "@color/colorSelectedDark",
+                            "textSize": "16sp"
+                        }]
+                    }
+                }
+            },
+            "onSpinnerItemSelected": "updateDistrictList"
+        }, {
+            "type": "TextView",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "textSize": "12sp",
+            "textColor": "#99a1c5",
+            "lineSpacingExtra": "9sp",
+            "layout_marginLeft": "8dp",
+            "layout_marginRight": "8dp",
+            "layout_marginTop": "48dp",
+            "fontFamily": "fonts/rubik_medium.ttf",
+            "textAllCaps": "true",
+            "text": "Select Bank"
+        }, {
+            "type": "AppCompatSpinner",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "background": "@drawable/spinner_bg",
+            "layout_marginLeft": "8dp",
+            "layout_marginRight": "8dp",
+            "layout_marginTop": "5dp",
+            "id":"spinnerDistrictSelection",
+            "data": {
+                "items": "@{city}"
+            },
+            "adapter": {
+                "@": {
+                    "type": "SimpleSpinnerAdapter",
+                    "item-count": "@{items.$length}",
+                    "item-layout": {
+                        "type": "LinearLayout",
+                        "layout_width": "match_parent",
                         "layout_height": "wrap_content",
-                        "layout_weight": "1",
-                        "fontFamily": "fonts/rubik_medium.ttf",
-                        "lineSpacingExtra": "3.3sp",
-                        "text": "5th of every month",
-                        "textColor": "#000759",
-                        "textSize": "13sp"
-                    }]
-                }, {
-                    "type": "LinearLayout",
-                    "layout_width": "match_parent",
-                    "layout_height": "wrap_content",
-                    "orientation": "horizontal",
-                    "layout_marginTop": "12dp",
-                    "children": [{
-                        "type": "TextView",
-                        "layout_width": "0dp",
+                        "data": {
+                            "item": "@{items[$index]}"
+                        },
+                        "children": [{
+                            "type": "TextView",
+                            "layout_width": "wrap_content",
+                            "layout_height": "wrap_content",
+                            "fontFamily": "fonts/rubik_medium.ttf",
+                            "lineSpacingExtra": "2.3sp",
+                            "padding": "16dp",
+                            "text": "@{item}",
+                            "textColor": "@color/colorSelectedDark",
+                            "textSize": "16sp"
+                        }]
+                    }
+                }
+            },
+            "onSpinnerItemSelected": "updateBranchList"
+        }, {
+            "type": "TextView",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "textSize": "12sp",
+            "textColor": "#99a1c5",
+            "lineSpacingExtra": "9sp",
+            "layout_marginLeft": "8dp",
+            "layout_marginRight": "8dp",
+            "layout_marginTop": "48dp",
+            "fontFamily": "fonts/rubik_medium.ttf",
+            "textAllCaps": "true",
+            "text": "Select Bank"
+        }, {
+            "type": "AppCompatSpinner",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "background": "@drawable/spinner_bg",
+            "id": "listViewState",
+            "layout_marginLeft": "8dp",
+            "layout_marginRight": "8dp",
+            "layout_marginTop": "5dp",
+            "id":"spinnerBranchSelection",
+            "data": {
+                "items": "@{branch}"
+            },
+            "adapter": {
+                "@": {
+                    "type": "SimpleSpinnerAdapter",
+                    "item-count": "@{items.$length}",
+                    "item-layout": {
+                        "type": "LinearLayout",
+                        "layout_width": "match_parent",
                         "layout_height": "wrap_content",
-                        "layout_weight": "1",
-                        "fontFamily": "fonts/rubik_medium.ttf",
-                        "lineSpacingExtra": "3.3sp",
-                        "text": "Processing Fee",
-                        "textColor": "#6f7f9f",
-                        "textSize": "13sp"
-                    }, {
-                        "type": "TextView",
-                        "layout_width": "0dp",
-                        "layout_height": "wrap_content",
-                        "id": "textProcessingFeeAmount",
-                        "layout_weight": "1",
-                        "fontFamily": "fonts/rubik_medium.ttf",
-                        "lineSpacingExtra": "3.3sp",
-                        "text": "@{fn:format('Rs. %s',@{fn:number(@{item.processingFee})})}",
-                        "textColor": "#000759",
-                        "textSize": "13sp"
-                    }]
-                }, {
-                    "type": "LinearLayout",
-                    "layout_width": "match_parent",
-                    "layout_height": "wrap_content",
-                    "orientation": "horizontal",
-                    "layout_marginTop": "12dp",
-                    "children": [{
-                        "type": "TextView",
-                        "layout_width": "0dp",
-                        "layout_height": "wrap_content",
-                        "layout_weight": "1",
-                        "fontFamily": "fonts/rubik_medium.ttf",
-                        "lineSpacingExtra": "3.3sp",
-                        "text": "Total Interest",
-                        "textColor": "#6f7f9f",
-                        "textSize": "13sp"
-                    }, {
-                        "type": "TextView",
-                        "layout_width": "0dp",
-                        "layout_height": "wrap_content",
-                        "id": "textTotalInterestAmount",
-                        "layout_weight": "1",
-                        "fontFamily": "fonts/rubik_medium.ttf",
-                        "lineSpacingExtra": "3.3sp",
-                        "text": "@{fn:format('Rs. %s',@{fn:number(@{item.roi})})}",
-                        "textColor": "#000759",
-                        "textSize": "13sp"
-                    }]
-                }]
-            }]
+                        "data": {
+                            "item": "@{items[$index]}"
+                        },
+                        "children": [{
+                            "type": "TextView",
+                            "layout_width": "wrap_content",
+                            "layout_height": "wrap_content",
+                            "fontFamily": "fonts/rubik_medium.ttf",
+                            "lineSpacingExtra": "2.3sp",
+                            "padding": "16dp",
+                            "text": "@{item}",
+                            "textColor": "@color/colorSelectedDark",
+                            "textSize": "16sp"
+                        }]
+                    }
+                }
+            },
+            "onSpinnerItemSelected": "getIfscCode"
+        }, {
+            "type": "TextView",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "textSize": "12sp",
+            "textColor": "#99a1c5",
+            "lineSpacingExtra": "9sp",
+            "layout_marginTop": "48dp",
+            "layout_gravity": "center_horizontal",
+            "fontFamily": "fonts/rubik_regular.ttf",
+            "textAllCaps": "true",
+            "text": "Your bank IFSC code is:"
+        }, {
+            "type": "TextView",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "textSize": "26sp",
+            "textColor": "#2d3566",
+            "lineSpacingExtra": "9sp",
+            "layout_marginTop": "8dp",
+            "layout_gravity": "center_horizontal",
+            "fontFamily": "fonts/rubik_medium.ttf",
+            "textAllCaps": "true",
+            "text": "@{ifscCode[0]}"
         }, {
             "type": "TextView",
             "id": "buttonProceed",
-            "layout_width": "match_parent",
+            "layout_width": "wrap_content",
             "layout_height": "wrap_content",
             "layout_gravity": "center_horizontal",
             "layout_marginTop": "24dp",
@@ -310,21 +295,14 @@
             "clickable": "true",
             "focusable": "true",
             "fontFamily": "fonts/rubik_medium.ttf",
-            "paddingLeft": "64dp",
+            "paddingStart": "64dp",
             "paddingTop": "16dp",
-            "paddingRight": "64dp",
-            "gravity": "center",
+            "paddingEnd": "64dp",
             "paddingBottom": "16dp",
-            "onClick": "nextScreen::PERSONAL DETAILS",
-            "text": "CONFIRM & PROCEED",
-            "textColor": "@color/colorSelected"
-        }, {
-            "type": "BorderlessButton",
-            "layout_width": "match_parent",
-            "layout_height": "wrap_content",
-            "text": "Didn’t like the offer?",
-            "fontFamily": "fonts/rubik_medium.ttf",
-            "textColor": "#4d6cd9"
+            "onClick": "nextScreen::REPAYMENT SETUP",
+            "text": "COPY & Proceed",
+            "textColor": "@color/colorSelected",
+            "textAllCaps": "true"
         }]
     }]
 }

@@ -257,4 +257,8 @@ public class Attributes {
         public static final String repeatCount = "repeatCount";
         public static final String jsonWithCacheKey = "jsonWithCacheKey";
     }
+
+    public static final class Spinner {
+        public static final String onSpinnerItemSelected = "onSpinnerItemSelected";
+    }
 }

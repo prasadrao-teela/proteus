@@ -1,6 +1,8 @@
 package com.flipkart.android.proteus.support.parser;
 
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,9 +13,11 @@ import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
+import com.flipkart.android.proteus.processor.EventProcessor;
 import com.flipkart.android.proteus.support.adapter.ProteusSpinnerAdapter;
 import com.flipkart.android.proteus.support.adapter.SpinnerAdapterFactory;
 import com.flipkart.android.proteus.support.view.ProteusSpinner;
+import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
@@ -89,5 +93,22 @@ public class SpinnerParser<V extends AppCompatSpinner> extends ViewTypeParser<V>
             }
         });
 
+        addAttributeProcessor(Attributes.Spinner.onSpinnerItemSelected, new EventProcessor<V>() {
+            @Override
+            public void setOnEventListener(V view, Value value) {
+                view.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position,
+                        long id) {
+                        trigger(Attributes.Spinner.onSpinnerItemSelected, value, (ProteusView) view);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+            }
+        });
     }
 }

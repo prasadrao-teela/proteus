@@ -7,6 +7,7 @@ import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.value.Array;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
@@ -21,6 +22,7 @@ public class SimpleSpinnerAdapter extends ProteusSpinnerAdapter {
 
     private static final String ATTRIBUTE_ITEM_LAYOUT = "item-layout";
     private static final String ATTRIBUTE_ITEM_COUNT = "item-count";
+    private static final String ATTRIBUTE_ITEMS = "items";
 
     public static final Builder<SimpleSpinnerAdapter> BUILDER = (view, config) -> {
         Layout layout = config.getAsObject().getAsLayout(ATTRIBUTE_ITEM_LAYOUT);
@@ -77,5 +79,11 @@ public class SimpleSpinnerAdapter extends ProteusSpinnerAdapter {
         ObjectValue data = getItem(position);
         viewManager.update(data);
         return view.getAsView();
+    }
+
+    public void updateData(Array data) {
+        this.data.add(ATTRIBUTE_ITEMS, data);
+        count = data.size();
+        notifyDataSetChanged();
     }
 }
