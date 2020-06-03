@@ -259,6 +259,7 @@ public class Attributes {
     }
 
     public static final class Spinner {
+        public static final String item = "item";
         public static final String onSpinnerItemSelected = "onSpinnerItemSelected";
     }
 }

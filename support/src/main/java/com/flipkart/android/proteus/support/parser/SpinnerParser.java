@@ -98,7 +98,7 @@ public class SpinnerParser<V extends AppCompatSpinner> extends ViewTypeParser<V>
             public void setOnEventListener(V view, Value value) {
                 view.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position,
+                    public void onItemSelected(AdapterView<?> parent, View v, int position,
                         long id) {
                         trigger(Attributes.Spinner.onSpinnerItemSelected, value, (ProteusView) view);
                     }

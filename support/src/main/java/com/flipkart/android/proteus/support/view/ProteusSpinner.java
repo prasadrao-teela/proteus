@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.toolbox.Attributes;
+import com.flipkart.android.proteus.value.ObjectValue;
 
 /**
  * Created by Prasad Rao on 29-04-2020 12:53
@@ -33,5 +35,15 @@ public class ProteusSpinner extends AppCompatSpinner implements ProteusView {
     @Override
     public View getAsView() {
         return this;
+    }
+
+    public String getSelectedValue(String key) {
+        return ((ObjectValue) getSelectedItem()).getAsString(key);
+    }
+
+    @Override
+    public Object getSelectedItem() {
+        ObjectValue selectedItem = (ObjectValue) super.getSelectedItem();
+        return selectedItem.getAsObject(Attributes.Spinner.item);
     }
 }

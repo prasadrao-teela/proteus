@@ -125,6 +125,9 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
             Log.i("ProteusEvent", value.toString());
 
             if ("updateStateList".equals(value.getAsString())) {
+
+                System.out.println("debug: spinner: selected bank: "+((ProteusSpinner)view).getSelectedItem());
+
                 proteusManager.getApi().getUserData().enqueue(new Callback<ObjectValue>() {
                     @Override
                     public void onResponse(Call<ObjectValue> call, Response<ObjectValue> response) {
