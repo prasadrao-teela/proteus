@@ -124,24 +124,28 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
         public void onEvent(String event, Value value, ProteusView view) {
             Log.i("ProteusEvent", value.toString());
 
+            if ("updateDistrictList".equals(value.getAsString())) {
+                System.out.println("debug: spinner: selected bank: "+((ProteusSpinner)view).getSelectedItem());
+                return;
+            }
             if ("updateStateList".equals(value.getAsString())) {
 
                 System.out.println("debug: spinner: selected bank: "+((ProteusSpinner)view).getSelectedItem());
 
-                proteusManager.getApi().getUserData().enqueue(new Callback<ObjectValue>() {
-                    @Override
-                    public void onResponse(Call<ObjectValue> call, Response<ObjectValue> response) {
-                        Value updated = response.body().get("state");
-                        System.out.println("debug: updated states: " + updated);
-                        //                updateRootData(item);
-                        updateSpinner(updated);
-                    }
-
-                    @Override
-                    public void onFailure(Call<ObjectValue> call, Throwable t) {
-
-                    }
-                });
+//                proteusManager.getApi().getUserData().enqueue(new Callback<ObjectValue>() {
+//                    @Override
+//                    public void onResponse(Call<ObjectValue> call, Response<ObjectValue> response) {
+//                        Value updated = response.body().get("state");
+//                        System.out.println("debug: updated states: " + updated);
+//                        //                updateRootData(item);
+//                        updateSpinner(updated);
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<ObjectValue> call, Throwable t) {
+//
+//                    }
+//                });
             } else if ("updateLoanAmountText".equals(value.getAsString())) {
                 int min = ((ProteusSeekBar) view).getMinValue();
                 int stepSize = ((ProteusSeekBar) view).getStepSize();
