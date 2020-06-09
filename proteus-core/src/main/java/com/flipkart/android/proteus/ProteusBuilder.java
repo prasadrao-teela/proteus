@@ -16,6 +16,9 @@
 
 package com.flipkart.android.proteus;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.flipkart.android.proteus.parser.IncludeParser;
 import com.flipkart.android.proteus.parser.ViewParser;
 import com.flipkart.android.proteus.parser.custom.ButtonParser;
@@ -36,15 +39,11 @@ import com.flipkart.android.proteus.parser.custom.ScrollViewParser;
 import com.flipkart.android.proteus.parser.custom.StepProgressBarParser;
 import com.flipkart.android.proteus.parser.custom.TextViewParser;
 import com.flipkart.android.proteus.parser.custom.ViewGroupParser;
-import com.flipkart.android.proteus.parser.custom.WebViewParser;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 /**
  * ProteusBuilder
@@ -73,7 +72,6 @@ public class ProteusBuilder {
     builder.register(new EditTextParser());
     builder.register(new ButtonParser());
     builder.register(new ImageButtonParser());
-    builder.register(new WebViewParser());
     builder.register(new RatingBarParser());
     builder.register(new CheckBoxParser());
     builder.register(new RadioButtonParser());
