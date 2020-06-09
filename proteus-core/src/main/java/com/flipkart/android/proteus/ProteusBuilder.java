@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.flipkart.android.proteus.parser.IncludeParser;
+import com.flipkart.android.proteus.parser.VideoViewParser;
 import com.flipkart.android.proteus.parser.ViewParser;
 import com.flipkart.android.proteus.parser.custom.ButtonParser;
 import com.flipkart.android.proteus.parser.custom.CheckBoxParser;
@@ -71,6 +72,7 @@ public class ProteusBuilder {
     builder.register(new ImageViewParser());
     builder.register(new TextViewParser());
     builder.register(new EditTextParser());
+    builder.register(new VideoViewParser());
     builder.register(new ButtonParser());
     builder.register(new ImageButtonParser());
     builder.register(new RatingBarParser());
