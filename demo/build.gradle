@@ -78,5 +78,6 @@ android {
         implementation project(':design')
         implementation project(':support')
         implementation project(':animations')
+        implementation project(':web-support')
     }
 }

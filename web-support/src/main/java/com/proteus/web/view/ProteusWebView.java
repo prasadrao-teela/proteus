@@ -10,6 +10,7 @@ import android.webkit.WebView;
 import androidx.annotation.NonNull;
 
 import com.flipkart.android.proteus.ProteusView;
+import com.proteus.web.client.ProteusChromeClient;
 import com.proteus.web.client.ProteusWebViewClient;
 import com.proteus.web.util.WebViewDownloadListener;
 
@@ -37,6 +38,7 @@ public class ProteusWebView extends WebView implements ProteusView {
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         setWebViewClient(new ProteusWebViewClient());
+        setWebChromeClient(new ProteusChromeClient());
         setDownloadListener(new WebViewDownloadListener(context));
     }
 
