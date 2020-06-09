@@ -24,6 +24,7 @@ import com.flipkart.android.proteus.parser.ViewParser;
 import com.flipkart.android.proteus.parser.custom.ButtonParser;
 import com.flipkart.android.proteus.parser.custom.CheckBoxParser;
 import com.flipkart.android.proteus.parser.custom.EditTextParser;
+import com.flipkart.android.proteus.parser.custom.ExpandableLayoutParser;
 import com.flipkart.android.proteus.parser.custom.FrameLayoutParser;
 import com.flipkart.android.proteus.parser.custom.HorizontalProgressBarParser;
 import com.flipkart.android.proteus.parser.custom.HorizontalScrollViewParser;
@@ -79,6 +80,7 @@ public class ProteusBuilder {
     builder.register(new ProgressBarParser());
     builder.register(new HorizontalProgressBarParser());
     builder.register(new StepProgressBarParser());
+    builder.register(new ExpandableLayoutParser());
 
     // register the default functions
     builder.register(Function.DATE);
