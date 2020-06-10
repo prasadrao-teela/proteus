@@ -10,6 +10,7 @@ import android.webkit.WebView;
 import androidx.annotation.NonNull;
 
 import com.flipkart.android.proteus.ProteusView;
+import com.proteus.web.callback.WebPageCallback;
 import com.proteus.web.client.ProteusChromeClient;
 import com.proteus.web.client.ProteusWebViewClient;
 import com.proteus.web.util.WebViewDownloadListener;
@@ -20,6 +21,8 @@ import com.proteus.web.util.WebViewDownloadListener;
 public class ProteusWebView extends WebView implements ProteusView {
 
     private Manager manager;
+
+    private WebPageCallback webPageCallback;
 
     @SuppressLint("SetJavaScriptEnabled")
     public ProteusWebView(Context context) {
@@ -37,9 +40,17 @@ public class ProteusWebView extends WebView implements ProteusView {
         settings.setSupportMultipleWindows(true);
         settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
-        setWebViewClient(new ProteusWebViewClient());
+        setWebViewClient(new ProteusWebViewClient(this));
         setWebChromeClient(new ProteusChromeClient());
         setDownloadListener(new WebViewDownloadListener(context));
+    }
+
+    public WebPageCallback getWebPageCallback() {
+        return webPageCallback;
+    }
+
+    public void setWebPageCallback(WebPageCallback webPageCallback) {
+        this.webPageCallback = webPageCallback;
     }
 
     @Override

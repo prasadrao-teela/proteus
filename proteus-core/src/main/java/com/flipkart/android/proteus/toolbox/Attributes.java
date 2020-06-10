@@ -135,6 +135,7 @@ public class Attributes {
     public static class WebView {
         public static final String Url = "url";
         public static final String HTML = "html";
+        public static final String onWebPageCompleted = "onWebPageCompleted";
     }
 
     public static class RatingBar {

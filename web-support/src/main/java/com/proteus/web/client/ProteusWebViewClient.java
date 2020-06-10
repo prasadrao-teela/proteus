@@ -10,6 +10,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.proteus.web.util.EmailSender;
+import com.proteus.web.view.ProteusWebView;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -18,6 +19,12 @@ import java.net.URLDecoder;
  * Created by Prasad Rao on 09-06-2020 10:54
  **/
 public class ProteusWebViewClient extends WebViewClient {
+
+    private final ProteusWebView proteusWebView;
+
+    public ProteusWebViewClient(ProteusWebView proteusWebView) {
+        this.proteusWebView = proteusWebView;
+    }
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -41,7 +48,9 @@ public class ProteusWebViewClient extends WebViewClient {
         if (!TextUtils.isEmpty(url)) {
             if (url.contains("webviewClose=true")) {
                 webView.clearHistory();
-                //TODO: Back press callback
+                if (proteusWebView.getWebPageCallback() != null) {
+                    proteusWebView.getWebPageCallback().onWebPageCompleted();
+                }
                 return true;
             }
             if (url.startsWith("mailto:")) {
