@@ -28,7 +28,7 @@ public class VideoViewParser<V extends VideoView> extends ViewTypeParser<V> {
     @Nullable
     @Override
     public String getParentType() {
-        return "SurfaceView";
+        return "View";
     }
 
     @NonNull
