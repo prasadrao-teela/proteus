@@ -19,7 +19,9 @@ package com.flipkart.android.proteus;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.flipkart.android.proteus.parser.ExpandableTextViewParser;
 import com.flipkart.android.proteus.parser.IncludeParser;
+import com.flipkart.android.proteus.parser.VideoViewParser;
 import com.flipkart.android.proteus.parser.ViewParser;
 import com.flipkart.android.proteus.parser.custom.ButtonParser;
 import com.flipkart.android.proteus.parser.custom.CheckBoxParser;
@@ -59,26 +61,28 @@ public class ProteusBuilder {
   private static final Module DEFAULT_MODULE = builder -> {
 
     // register the default parsers
-    builder.register(new ViewParser());
-    builder.register(new IncludeParser());
-    builder.register(new ViewGroupParser());
-    builder.register(new RelativeLayoutParser());
-    builder.register(new LinearLayoutParser());
-    builder.register(new FrameLayoutParser());
-    builder.register(new ScrollViewParser());
-    builder.register(new HorizontalScrollViewParser());
-    builder.register(new ImageViewParser());
-    builder.register(new TextViewParser());
-    builder.register(new EditTextParser());
-    builder.register(new ButtonParser());
-    builder.register(new ImageButtonParser());
-    builder.register(new RatingBarParser());
-    builder.register(new CheckBoxParser());
-    builder.register(new RadioButtonParser());
-    builder.register(new RadioGroupParser());
-    builder.register(new ProgressBarParser());
-    builder.register(new HorizontalProgressBarParser());
-    builder.register(new StepProgressBarParser());
+    builder.register(new ViewParser<>());
+    builder.register(new IncludeParser<>());
+    builder.register(new ViewGroupParser<>());
+    builder.register(new RelativeLayoutParser<>());
+    builder.register(new LinearLayoutParser<>());
+    builder.register(new FrameLayoutParser<>());
+    builder.register(new ScrollViewParser<>());
+    builder.register(new HorizontalScrollViewParser<>());
+    builder.register(new ImageViewParser<>());
+    builder.register(new TextViewParser<>());
+    builder.register(new EditTextParser<>());
+    builder.register(new ButtonParser<>());
+    builder.register(new ImageButtonParser<>());
+    builder.register(new RatingBarParser<>());
+    builder.register(new CheckBoxParser<>());
+    builder.register(new RadioButtonParser<>());
+    builder.register(new RadioGroupParser<>());
+    builder.register(new ProgressBarParser<>());
+    builder.register(new HorizontalProgressBarParser<>());
+    builder.register(new StepProgressBarParser<>());
+    builder.register(new ExpandableTextViewParser<>());
+    builder.register(new VideoViewParser<>());
 
     // register the default functions
     builder.register(Function.DATE);
