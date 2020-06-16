@@ -1,24 +1,12 @@
 {
     "type": "LinearLayout",
     "layout_width": "match_parent",
-    "layout_height": "wrap_content",
-    "orientation": "vertical",
-    "padding": "16dp",
+    "layout_height": "match_parent",
     "children": [{
-        "type": "ExpandableTextView",
-        "layout_width": "wrap_content",
-        "layout_height": "wrap_content",
-        "textSize": "14sp",
-        "textColor": "#99a1c5",
-        "lineSpacingExtra": "9sp",
-        "layout_marginLeft": "8dp",
-        "layout_marginRight": "8dp",
-        "layout_marginTop": "8dp",
-        "fontFamily": "fonts/rubik_regular.ttf",
-        "text": "I hereby appoint Prefr (Infocredit Services Pvt. Ltd.) as the authorised representative to receive my credit information from CIBIL \/ Equifax \/ Experian \/ CRIF High-mark (bureau). I hereby unconditionally consent to and instruct bureau to provide my credit information to me and Prefr\n\nBy submitting this form, I hereby authorise Prefr to do all of the following in connection with providing me with their services:\n\n1. Retain a copy of my credit information, along with other information I have given them access to under this authorisation, in accordance with Prefr’s Terms and Conditions and Privacy Policy\n\n2. Verify my identity and share personally identifiable information about me with the credit bureaus as required.",
-        "collapsibleMaxLines": 5,
-        "ellipsize":"end",
-        "maxLines": 5,
-        "expandText": "expandText"
+        "type": "WebView",
+        "layout_width": "match_parent",
+        "layout_height": "match_parent",
+        "url": "@{slushUrl}",
+        "onWebPageCompleted": "journey"
     }]
 }

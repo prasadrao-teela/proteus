@@ -50,6 +50,7 @@ public class ProteusWebViewClient extends WebViewClient {
                 webView.clearHistory();
                 if (proteusWebView.getWebPageCallback() != null) {
                     proteusWebView.getWebPageCallback().onWebPageCompleted();
+                    proteusWebView.setWebPageCallback(null);
                 }
                 return true;
             }
@@ -65,8 +66,9 @@ public class ProteusWebViewClient extends WebViewClient {
     }
 
     @Override
-    public void onPageFinished(WebView view, String url) {
-        super.onPageFinished(view, url);
+    public void onPageFinished(WebView webView, String url) {
+        super.onPageFinished(webView, url);
+        overrideUrlLoading(webView, url);
     }
 
 }
