@@ -263,4 +263,8 @@ public class Attributes {
         public static final String item = "item";
         public static final String onSpinnerItemSelected = "onSpinnerItemSelected";
     }
+    public static class MapView {
+        public static final String onMapReady = "onMapReady";
+        public static final String onLocationChanged = "onLocationChanged";
+    }
 }

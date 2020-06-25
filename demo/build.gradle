@@ -79,5 +79,6 @@ android {
         implementation project(':support')
         implementation project(':animations')
         implementation project(':web-support')
+        implementation project(':map-support')
     }
 }
