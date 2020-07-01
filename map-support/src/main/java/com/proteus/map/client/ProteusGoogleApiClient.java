@@ -23,7 +23,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.proteus.map.view.ProteusMapView;
 
 public class ProteusGoogleApiClient implements LocationListener,GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener  {
@@ -32,8 +32,10 @@ public class ProteusGoogleApiClient implements LocationListener,GoogleApiClient.
     private GoogleApiClient googleApiClient;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
-    public ProteusGoogleApiClient(Context context,GoogleMap googleMap){
+    private ProteusMapView mapView;
+    public ProteusGoogleApiClient(Context context, ProteusMapView mapView, GoogleMap googleMap){
         this.context = context;
+        this.mapView = mapView;
         this.googleMap = googleMap;
     }
 
@@ -67,9 +69,9 @@ public class ProteusGoogleApiClient implements LocationListener,GoogleApiClient.
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(1000);
-        locationRequest.setFastestInterval(1000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        locationRequest.setInterval(mapView.getInterval());
+        locationRequest.setFastestInterval(mapView.getFastestInterval());
+        locationRequest.setPriority(mapView.getPriority());
         if (ContextCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -80,16 +82,13 @@ public class ProteusGoogleApiClient implements LocationListener,GoogleApiClient.
                     removeLocationUpdates();
                 }
             };
-            fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if(location != null) {
-                        CameraPosition cameraPosition = new CameraPosition.Builder()
-                                .target(new LatLng(location.getLatitude(), location.getLongitude())).zoom(15).build();
+            fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                if(location != null) {
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(new LatLng(location.getLatitude(), location.getLongitude())).zoom(mapView.getZoomLevel()).build();
 
-                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                        removeLocationUpdates();
-                    }
+                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    removeLocationUpdates();
                 }
             });
             fusedLocationClient.requestLocationUpdates(locationRequest,locationCallback,null);
