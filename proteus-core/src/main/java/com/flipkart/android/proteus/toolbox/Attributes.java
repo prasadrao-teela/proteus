@@ -266,5 +266,9 @@ public class Attributes {
     public static class MapView {
         public static final String onMapReady = "onMapReady";
         public static final String onLocationChanged = "onLocationChanged";
+        public static final String zoomLevel = "zoomLevel";
+        public static final String interval = "interval";
+        public static final String fastestInterval = "fastestInterval";
+        public static final String priority = "priority";
     }
 }
