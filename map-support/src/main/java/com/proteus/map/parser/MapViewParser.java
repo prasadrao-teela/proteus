@@ -17,10 +17,13 @@ import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.proteus.map.constant.Keys;
 import com.proteus.map.view.ProteusMapView;
 
 public class MapViewParser <V extends ProteusMapView> extends ViewTypeParser<V> {
+    private final String LATITUDE = "latitude";
+    private final String LONGITUDE = "longitude";
+    private final String LOCATION = "location";
+    private final String DATA = "data";
     @NonNull
     @Override
     public String getType() {
@@ -90,19 +93,19 @@ public class MapViewParser <V extends ProteusMapView> extends ViewTypeParser<V> 
                         ObjectValue locationObjectValue = new ObjectValue();
                         if (value.isArray() && ((Array) value).size() > 0) {
                             ObjectValue objectValue = value.getAsArray().get(0).getAsObject();
-                            locationObjectValue.addProperty(Keys.LATITUDE,latitude);
-                            locationObjectValue.addProperty(Keys.LONGITUDE,longitude);
-                            ObjectValue dataObjectValue = objectValue.getAsObject(Keys.DATA);
+                            locationObjectValue.addProperty(LATITUDE,latitude);
+                            locationObjectValue.addProperty(LONGITUDE,longitude);
+                            ObjectValue dataObjectValue = objectValue.getAsObject(DATA);
                             if (dataObjectValue != null) {
-                                dataObjectValue.add(Keys.LOCATION, locationObjectValue);
+                                dataObjectValue.add(LOCATION, locationObjectValue);
                             } else {
-                                objectValue.add(Keys.LOCATION, locationObjectValue);
+                                objectValue.add(LOCATION, locationObjectValue);
                             }
                         } else if(value.isObject()){
                             ObjectValue objectValue = value.getAsObject();
-                            locationObjectValue.addProperty(Keys.LATITUDE,latitude);
-                            locationObjectValue.addProperty(Keys.LONGITUDE,longitude);
-                            objectValue.add(Keys.LOCATION,locationObjectValue);
+                            locationObjectValue.addProperty(LATITUDE,latitude);
+                            locationObjectValue.addProperty(LONGITUDE,longitude);
+                            objectValue.add(LOCATION,locationObjectValue);
                         }
                         trigger(Attributes.MapView.onLocationChanged, value, view);
                     });
