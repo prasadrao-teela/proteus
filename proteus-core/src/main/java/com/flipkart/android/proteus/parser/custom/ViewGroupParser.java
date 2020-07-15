@@ -30,6 +30,7 @@ import com.flipkart.android.proteus.exceptions.ProteusInflateException;
 import com.flipkart.android.proteus.managers.ViewGroupManager;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
+import com.flipkart.android.proteus.processor.EventProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.value.AttributeResource;
@@ -141,6 +142,21 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
       @Override
       public void handleStyleResource(T view, StyleResource style) {
         throw new IllegalArgumentException("children cannot be a style attribute");
+      }
+    });
+
+    addAttributeProcessor("onPageLoaded", new EventProcessor<T>() {
+      @Override
+      public void setOnEventListener(T view, Value value) {
+        view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+          @Override
+          public void onViewAttachedToWindow(View v) {
+            trigger("onPageLoaded",value,(ProteusView)view);
+          }
+
+          @Override
+          public void onViewDetachedFromWindow(View v) {}
+        });
       }
     });
   }
