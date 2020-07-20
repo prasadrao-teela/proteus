@@ -13,9 +13,7 @@ import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -48,7 +46,7 @@ public class MultiSelectionListAdapter extends ProteusRecyclerViewAdapter<Proteu
     private Map<String, Value> scope;
 
     private MultiSelectionListAdapter(ProteusLayoutInflater inflater, ObjectValue data,
-        Layout layout, int count) {
+                                      Layout layout, int count) {
         this.inflater = inflater;
         this.data = data;
         this.count = count;
@@ -80,6 +78,9 @@ public class MultiSelectionListAdapter extends ProteusRecyclerViewAdapter<Proteu
         return count;
     }
 
+    /**
+     * Return true, if any one of item is selected. false, otherwise.
+     */
     public boolean isAnyItemSelected() {
         for (boolean b : itemsSelected) {
             if (b) return true;
@@ -87,15 +88,17 @@ public class MultiSelectionListAdapter extends ProteusRecyclerViewAdapter<Proteu
         return false;
     }
 
-    public ObjectValue[] getSelectedItems() {
-        List<ObjectValue> list = new ArrayList<>();
+    /**
+     * Returns the selected items array.
+     */
+    public Array getSelectedItems() {
+        Array selectedItems = new Array();
         Array array = data.get(ATTRIBUTE_ITEMS).getAsArray();
         for (int i = 0; i < count; i++) {
             if (itemsSelected[i]) {
-                list.add(array.get(i).getAsObject());
+                selectedItems.add(array.get(i).getAsObject());
             }
         }
-        ObjectValue[] selectedItems = new ObjectValue[list.size()];
-        return list.toArray(selectedItems);
+        return selectedItems;
     }
 }
