@@ -41,7 +41,7 @@ public class ProteusWebViewClient extends WebViewClient {
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
         final Uri url = request.getUrl();
-        return url == null || overrideUrlLoading(view, url.getPath());
+        return url == null || overrideUrlLoading(view, url.toString());
     }
 
     private boolean overrideUrlLoading(WebView webView, String url) {
