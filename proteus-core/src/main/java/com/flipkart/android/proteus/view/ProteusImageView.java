@@ -25,6 +25,7 @@ import android.view.View;
 import com.flipkart.android.proteus.ProteusView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * ImageView
@@ -73,6 +74,7 @@ public class ProteusImageView extends android.widget.ImageView implements Proteu
     this.filePath = filePath;
   }
 
+  @Nullable
   public String getFilePath() {
     return filePath;
   }

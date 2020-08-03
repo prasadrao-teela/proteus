@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.flipkart.android.proteus.ProteusView;
 
@@ -14,6 +15,7 @@ import com.flipkart.android.proteus.ProteusView;
 public class ProteusVideoView extends VideoView implements ProteusView {
 
     private Manager manager;
+    private String filePath;
 
     public ProteusVideoView(Context context) {
         super(context);
@@ -33,5 +35,14 @@ public class ProteusVideoView extends VideoView implements ProteusView {
     @Override
     public View getAsView() {
         return this;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    @Nullable
+    public String getFilePath() {
+        return filePath;
     }
 }
