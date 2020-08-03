@@ -34,6 +34,7 @@ import androidx.annotation.NonNull;
 public class ProteusImageView extends android.widget.ImageView implements ProteusView {
 
   private Manager viewManager;
+  private String filePath;
 
   public ProteusImageView(Context context) {
     super(context);
@@ -66,5 +67,13 @@ public class ProteusImageView extends android.widget.ImageView implements Proteu
   @Override
   public View getAsView() {
     return this;
+  }
+
+  public void setFilePath(String filePath) {
+    this.filePath = filePath;
+  }
+
+  public String getFilePath() {
+    return filePath;
   }
 }
