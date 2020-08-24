@@ -31,6 +31,7 @@ import com.flipkart.android.proteus.managers.AdapterBasedViewManager;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.EventProcessor;
+import com.flipkart.android.proteus.support.v7.adapter.MultiSelectionListAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.RecyclerViewAdapterFactory;
 import com.flipkart.android.proteus.support.v7.decorator.MarginItemDecoration;
@@ -53,6 +54,7 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
     public static final String ATTRIBUTE_ADAPTER = "adapter";
     public static final String ATTRIBUTE_LAYOUT_MANAGER = "layout_manager";
     public static final String ATTRIBUTE_ON_ITEM_SELECTED = "onListItemSelected";
+    public static final String ATTRIBUTE_MULTI_SELECTION_CHANGE = "multiSelectionChanged";
 
     public static final String ATTRIBUTE_TYPE = ProteusConstants.TYPE;
 
@@ -185,6 +187,21 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
                             "debug: RecyclerViewParser: [position = " + position + ", " +
                                 "data = " + data);
                         trigger(ATTRIBUTE_ON_ITEM_SELECTED, value, view1);
+                    });
+                }
+            }
+        });
+
+        addAttributeProcessor(ATTRIBUTE_MULTI_SELECTION_CHANGE, new EventProcessor<V>() {
+            @Override
+            public void setOnEventListener(V view, Value value) {
+                ProteusRecyclerViewAdapter<?> adapter =
+                        (ProteusRecyclerViewAdapter<?>) view.getAdapter();
+                if (adapter instanceof MultiSelectionListAdapter) {
+                    MultiSelectionListAdapter multiSelectionListAdapter = (MultiSelectionListAdapter) adapter;
+                    multiSelectionListAdapter.setOnMultiSelectionChangeListener((view1, isAnyItemSelected) -> {
+                        System.out.println("debug: RecyclerViewParser: [isAnyItemSelected = " + isAnyItemSelected+" ]");
+                        trigger(ATTRIBUTE_MULTI_SELECTION_CHANGE, value, view1);
                     });
                 }
             }

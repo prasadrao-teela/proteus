@@ -22,4 +22,6 @@
     <dimen name="ab">?actionBarSize</dimen>
     <dimen name="sixty">60dp</dimen>
     <dimen name="default_border_radius">8dp</dimen>
+    <dimen name="loan_journey_outlined_border">1dp</dimen>
+    <dimen name="loan_journey_border_width">1dp</dimen>
 </resources>

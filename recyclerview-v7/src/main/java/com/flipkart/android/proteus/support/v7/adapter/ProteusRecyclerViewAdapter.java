@@ -47,7 +47,21 @@ public abstract class ProteusRecyclerViewAdapter<VH extends ProteusViewHolder>
         return onItemClickListener;
     }
 
+    protected OnMultiSelectionChangeListener onMultiSelectionChangeListener;
+
+    public void setOnMultiSelectionChangeListener(OnMultiSelectionChangeListener onMultiSelectionChangeListener){
+        this.onMultiSelectionChangeListener = onMultiSelectionChangeListener;
+    }
+
+    public OnMultiSelectionChangeListener getOnMultiSelectionChangeListener(){
+        return onMultiSelectionChangeListener;
+    }
+
     public interface OnItemClickListener {
         void onItemClick(ProteusView view, ObjectValue data, int position);
+    }
+
+    public interface OnMultiSelectionChangeListener {
+        void onSelectionChanged(ProteusView view, boolean isAnyItemSelected);
     }
 }
