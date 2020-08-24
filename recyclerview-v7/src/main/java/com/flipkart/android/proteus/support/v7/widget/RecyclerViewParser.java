@@ -55,6 +55,8 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
     public static final String ATTRIBUTE_LAYOUT_MANAGER = "layout_manager";
     public static final String ATTRIBUTE_ON_ITEM_SELECTED = "onListItemSelected";
     public static final String ATTRIBUTE_MULTI_SELECTION_CHANGE = "multiSelectionChanged";
+    public static final String ATTRIBUTE_ON_ANY_ITEM_SELECTED = "onAnyItemSelected";
+    public static final String ATTRIBUTE_NO_ITEM_SELECTED = "onNoItemSelected";
 
     public static final String ATTRIBUTE_TYPE = ProteusConstants.TYPE;
 
@@ -175,33 +177,29 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
             }
         });
 
-        addAttributeProcessor(ATTRIBUTE_ON_ITEM_SELECTED, new EventProcessor<V>() {
-            @Override
-            public void setOnEventListener(V view, Value value) {
-
-                ProteusRecyclerViewAdapter<?> adapter =
-                    (ProteusRecyclerViewAdapter<?>) view.getAdapter();
-                if (adapter != null) {
-                    adapter.setOnItemClickListener((view1, data, position) -> {
-                        System.out.println(
-                            "debug: RecyclerViewParser: [position = " + position + ", " +
-                                "data = " + data);
-                        trigger(ATTRIBUTE_ON_ITEM_SELECTED, value, view1);
-                    });
-                }
-            }
-        });
-
-        addAttributeProcessor(ATTRIBUTE_MULTI_SELECTION_CHANGE, new EventProcessor<V>() {
+        addAttributeProcessor(ATTRIBUTE_ON_ANY_ITEM_SELECTED, new EventProcessor<V>() {
             @Override
             public void setOnEventListener(V view, Value value) {
                 ProteusRecyclerViewAdapter<?> adapter =
                         (ProteusRecyclerViewAdapter<?>) view.getAdapter();
                 if (adapter instanceof MultiSelectionListAdapter) {
                     MultiSelectionListAdapter multiSelectionListAdapter = (MultiSelectionListAdapter) adapter;
-                    multiSelectionListAdapter.setOnMultiSelectionChangeListener((view1, isAnyItemSelected) -> {
-                        System.out.println("debug: RecyclerViewParser: [isAnyItemSelected = " + isAnyItemSelected+" ]");
-                        trigger(ATTRIBUTE_MULTI_SELECTION_CHANGE, value, view1);
+                    multiSelectionListAdapter.setOnAnyItemSelectedListener((proteusView) ->{
+                        trigger(ATTRIBUTE_ON_ANY_ITEM_SELECTED,value, proteusView);
+                    });
+                }
+            }
+        });
+
+        addAttributeProcessor(ATTRIBUTE_NO_ITEM_SELECTED, new EventProcessor<V>() {
+            @Override
+            public void setOnEventListener(V view, Value value) {
+                ProteusRecyclerViewAdapter<?> adapter =
+                        (ProteusRecyclerViewAdapter<?>) view.getAdapter();
+                if (adapter instanceof MultiSelectionListAdapter) {
+                    MultiSelectionListAdapter multiSelectionListAdapter = (MultiSelectionListAdapter) adapter;
+                    multiSelectionListAdapter.setOnNoItemSelectedListener((proteusView) ->{
+                        trigger(ATTRIBUTE_NO_ITEM_SELECTED,value, proteusView);
                     });
                 }
             }

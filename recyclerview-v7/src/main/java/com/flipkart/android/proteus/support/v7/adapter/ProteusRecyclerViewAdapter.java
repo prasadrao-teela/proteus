@@ -38,6 +38,9 @@ public abstract class ProteusRecyclerViewAdapter<VH extends ProteusViewHolder>
     }
 
     protected OnItemClickListener onItemClickListener;
+    protected OnMultiSelectionChangeListener onMultiSelectionChangeListener;
+    protected OnAnyItemSelectedListener onAnyItemSelectedListener;
+    protected OnNoItemSelectedListener onNoItemSelectedListener;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
@@ -47,7 +50,6 @@ public abstract class ProteusRecyclerViewAdapter<VH extends ProteusViewHolder>
         return onItemClickListener;
     }
 
-    protected OnMultiSelectionChangeListener onMultiSelectionChangeListener;
 
     public void setOnMultiSelectionChangeListener(OnMultiSelectionChangeListener onMultiSelectionChangeListener){
         this.onMultiSelectionChangeListener = onMultiSelectionChangeListener;
@@ -57,11 +59,36 @@ public abstract class ProteusRecyclerViewAdapter<VH extends ProteusViewHolder>
         return onMultiSelectionChangeListener;
     }
 
+    public void setOnAnyItemSelectedListener(OnAnyItemSelectedListener onAnyItemSelectedListener){
+        this.onAnyItemSelectedListener = onAnyItemSelectedListener;
+    }
+
+    public OnAnyItemSelectedListener getOnAnyItemSelectedListener(){
+        return onAnyItemSelectedListener;
+    }
+
+    public void setOnNoItemSelectedListener(OnNoItemSelectedListener onNoItemSelectedListener){
+        this.onNoItemSelectedListener = onNoItemSelectedListener;
+    }
+
+    public OnNoItemSelectedListener getOnNoItemSelectedListener(){
+        return onNoItemSelectedListener;
+    }
+
     public interface OnItemClickListener {
         void onItemClick(ProteusView view, ObjectValue data, int position);
     }
 
     public interface OnMultiSelectionChangeListener {
-        void onSelectionChanged(ProteusView view, boolean isAnyItemSelected);
+        void onAnyItemSelected(ProteusView view);
+        void onNoItemSelected(ProteusView view);
+    }
+
+    public interface OnAnyItemSelectedListener {
+        void onAnyItemSelected(ProteusView view);
+    }
+
+    public interface OnNoItemSelectedListener {
+        void onNoItemSelected(ProteusView view);
     }
 }
