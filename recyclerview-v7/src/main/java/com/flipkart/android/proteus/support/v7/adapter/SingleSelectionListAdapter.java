@@ -74,12 +74,26 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
             holder.view.getAsView().setOnClickListener(v -> {
                 Array items = this.data.getAsArray(ATTRIBUTE_ITEMS);
                 for (int i = 0; i < items.size(); i++) {
-                    items.get(i).getAsObject().addProperty(ATTRIBUTE_SELECTED, i == position);
+                    ObjectValue objectValue = items.get(i).getAsObject();
+                    if (objectValue.getAsBoolean(ATTRIBUTE_SELECTED, false)) {
+                        objectValue.addProperty(ATTRIBUTE_SELECTED, false);
+                    } else {
+                        objectValue.addProperty(ATTRIBUTE_SELECTED, i == position);
+                    }
                 }
                 notifyDataSetChanged();
 
                 if (onItemClickListener != null) {
                     onItemClickListener.onItemClick(holder.view, item, position);
+                }
+
+                if (getOnAnyItemSelectedListener() != null) {
+                    if (isItemSelected())
+                        getOnAnyItemSelectedListener().onAnyItemSelected(holder.view);
+                }
+                if (getOnNoItemSelectedListener() != null) {
+                    if (!isItemSelected())
+                        getOnNoItemSelectedListener().onNoItemSelected(holder.view);
                 }
             });
         }

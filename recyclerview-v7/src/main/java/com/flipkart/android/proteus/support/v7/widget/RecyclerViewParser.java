@@ -34,6 +34,7 @@ import com.flipkart.android.proteus.processor.EventProcessor;
 import com.flipkart.android.proteus.support.v7.adapter.MultiSelectionListAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.RecyclerViewAdapterFactory;
+import com.flipkart.android.proteus.support.v7.adapter.SingleSelectionListAdapter;
 import com.flipkart.android.proteus.support.v7.decorator.MarginItemDecoration;
 import com.flipkart.android.proteus.support.v7.layoutmanager.LayoutManagerFactory;
 import com.flipkart.android.proteus.value.AttributeResource;
@@ -187,6 +188,11 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
                     multiSelectionListAdapter.setOnAnyItemSelectedListener((proteusView) ->{
                         trigger(ATTRIBUTE_ON_ANY_ITEM_SELECTED,value, proteusView);
                     });
+                } else if (adapter instanceof SingleSelectionListAdapter) {
+                    SingleSelectionListAdapter singleSelectionListAdapter = (SingleSelectionListAdapter) adapter;
+                    singleSelectionListAdapter.setOnAnyItemSelectedListener((proteusView) ->{
+                        trigger(ATTRIBUTE_ON_ANY_ITEM_SELECTED,value, proteusView);
+                    });
                 }
             }
         });
@@ -199,6 +205,11 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
                 if (adapter instanceof MultiSelectionListAdapter) {
                     MultiSelectionListAdapter multiSelectionListAdapter = (MultiSelectionListAdapter) adapter;
                     multiSelectionListAdapter.setOnNoItemSelectedListener((proteusView) ->{
+                        trigger(ATTRIBUTE_NO_ITEM_SELECTED,value, proteusView);
+                    });
+                }else  if (adapter instanceof SingleSelectionListAdapter) {
+                    SingleSelectionListAdapter singleSelectionListAdapter = (SingleSelectionListAdapter) adapter;
+                    singleSelectionListAdapter.setOnNoItemSelectedListener((proteusView) ->{
                         trigger(ATTRIBUTE_NO_ITEM_SELECTED,value, proteusView);
                     });
                 }
