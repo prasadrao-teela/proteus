@@ -29,12 +29,11 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.managers.AdapterBasedViewManager;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
+import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.EventProcessor;
-import com.flipkart.android.proteus.support.v7.adapter.MultiSelectionListAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.RecyclerViewAdapterFactory;
-import com.flipkart.android.proteus.support.v7.adapter.SingleSelectionListAdapter;
 import com.flipkart.android.proteus.support.v7.decorator.MarginItemDecoration;
 import com.flipkart.android.proteus.support.v7.layoutmanager.LayoutManagerFactory;
 import com.flipkart.android.proteus.value.AttributeResource;
@@ -55,7 +54,7 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
     public static final String ATTRIBUTE_ADAPTER = "adapter";
     public static final String ATTRIBUTE_LAYOUT_MANAGER = "layout_manager";
     public static final String ATTRIBUTE_ON_ITEM_SELECTED = "onListItemSelected";
-    public static final String ATTRIBUTE_MULTI_SELECTION_CHANGE = "multiSelectionChanged";
+    public static final String ATTRIBUTE_ENABLE_UN_SELECT = "enableUnSelect";
     public static final String ATTRIBUTE_ON_ANY_ITEM_SELECTED = "onAnyItemSelected";
     public static final String ATTRIBUTE_NO_ITEM_SELECTED = "onNoItemSelected";
 
@@ -177,22 +176,42 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
                 view.addItemDecoration(new MarginItemDecoration((int) dimension));
             }
         });
+        //This flag is for controlling select/unSelect for singleSelectionRecyclerView Adapetr
+        addAttributeProcessor(ATTRIBUTE_ENABLE_UN_SELECT, new BooleanAttributeProcessor<V>() {
+            @Override
+            public void setBoolean(V view, boolean value) {
+                ProteusRecyclerViewAdapter<?> adapter =
+                        (ProteusRecyclerViewAdapter<?>) view.getAdapter();
+                if(adapter != null){
+                    adapter.setEnableUnSelect(value);
+                }
+            }
+        });
+
+        addAttributeProcessor(ATTRIBUTE_ON_ITEM_SELECTED, new EventProcessor<V>() {
+            @Override
+            public void setOnEventListener(V view, Value value) {
+
+                ProteusRecyclerViewAdapter<?> adapter =
+                        (ProteusRecyclerViewAdapter<?>) view.getAdapter();
+                if (adapter != null) {
+                    adapter.setOnItemClickListener((view1, data, position) -> {
+                        System.out.println(
+                                "debug: RecyclerViewParser: [position = " + position + ", " +
+                                        "data = " + data);
+                        trigger(ATTRIBUTE_ON_ITEM_SELECTED, value, view1);
+                    });
+                }
+            }
+        });
 
         addAttributeProcessor(ATTRIBUTE_ON_ANY_ITEM_SELECTED, new EventProcessor<V>() {
             @Override
             public void setOnEventListener(V view, Value value) {
                 ProteusRecyclerViewAdapter<?> adapter =
                         (ProteusRecyclerViewAdapter<?>) view.getAdapter();
-                if (adapter instanceof MultiSelectionListAdapter) {
-                    MultiSelectionListAdapter multiSelectionListAdapter = (MultiSelectionListAdapter) adapter;
-                    multiSelectionListAdapter.setOnAnyItemSelectedListener((proteusView) ->{
-                        trigger(ATTRIBUTE_ON_ANY_ITEM_SELECTED,value, proteusView);
-                    });
-                } else if (adapter instanceof SingleSelectionListAdapter) {
-                    SingleSelectionListAdapter singleSelectionListAdapter = (SingleSelectionListAdapter) adapter;
-                    singleSelectionListAdapter.setOnAnyItemSelectedListener((proteusView) ->{
-                        trigger(ATTRIBUTE_ON_ANY_ITEM_SELECTED,value, proteusView);
-                    });
+                if (adapter != null) {
+                    adapter.setOnAnyItemSelectedListener((proteusView) -> trigger(ATTRIBUTE_ON_ANY_ITEM_SELECTED, value, proteusView));
                 }
             }
         });
@@ -202,16 +221,8 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
             public void setOnEventListener(V view, Value value) {
                 ProteusRecyclerViewAdapter<?> adapter =
                         (ProteusRecyclerViewAdapter<?>) view.getAdapter();
-                if (adapter instanceof MultiSelectionListAdapter) {
-                    MultiSelectionListAdapter multiSelectionListAdapter = (MultiSelectionListAdapter) adapter;
-                    multiSelectionListAdapter.setOnNoItemSelectedListener((proteusView) ->{
-                        trigger(ATTRIBUTE_NO_ITEM_SELECTED,value, proteusView);
-                    });
-                }else  if (adapter instanceof SingleSelectionListAdapter) {
-                    SingleSelectionListAdapter singleSelectionListAdapter = (SingleSelectionListAdapter) adapter;
-                    singleSelectionListAdapter.setOnNoItemSelectedListener((proteusView) ->{
-                        trigger(ATTRIBUTE_NO_ITEM_SELECTED,value, proteusView);
-                    });
+                if (adapter != null) {
+                    adapter.setOnNoItemSelectedListener((proteusView) -> trigger(ATTRIBUTE_NO_ITEM_SELECTED, value, proteusView));
                 }
             }
         });

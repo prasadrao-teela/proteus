@@ -37,10 +37,10 @@ public abstract class ProteusRecyclerViewAdapter<VH extends ProteusViewHolder>
         A create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config);
     }
 
-    protected OnItemClickListener onItemClickListener;
-    protected OnMultiSelectionChangeListener onMultiSelectionChangeListener;
-    protected OnAnyItemSelectedListener onAnyItemSelectedListener;
-    protected OnNoItemSelectedListener onNoItemSelectedListener;
+    private OnItemClickListener onItemClickListener;
+    private OnAnyItemSelectedListener onAnyItemSelectedListener;
+    private OnNoItemSelectedListener onNoItemSelectedListener;
+    private boolean enableUnSelect;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
@@ -48,15 +48,6 @@ public abstract class ProteusRecyclerViewAdapter<VH extends ProteusViewHolder>
 
     public OnItemClickListener getOnItemClickListener() {
         return onItemClickListener;
-    }
-
-
-    public void setOnMultiSelectionChangeListener(OnMultiSelectionChangeListener onMultiSelectionChangeListener){
-        this.onMultiSelectionChangeListener = onMultiSelectionChangeListener;
-    }
-
-    public OnMultiSelectionChangeListener getOnMultiSelectionChangeListener(){
-        return onMultiSelectionChangeListener;
     }
 
     public void setOnAnyItemSelectedListener(OnAnyItemSelectedListener onAnyItemSelectedListener){
@@ -75,13 +66,16 @@ public abstract class ProteusRecyclerViewAdapter<VH extends ProteusViewHolder>
         return onNoItemSelectedListener;
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(ProteusView view, ObjectValue data, int position);
+    public void setEnableUnSelect(boolean enableUnSelect){
+        this.enableUnSelect = enableUnSelect;
     }
 
-    public interface OnMultiSelectionChangeListener {
-        void onAnyItemSelected(ProteusView view);
-        void onNoItemSelected(ProteusView view);
+    public boolean isEnableUnSelect(){
+        return enableUnSelect;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(ProteusView view, ObjectValue data, int position);
     }
 
     public interface OnAnyItemSelectedListener {
