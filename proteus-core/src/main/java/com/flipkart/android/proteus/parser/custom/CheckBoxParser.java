@@ -19,15 +19,18 @@ package com.flipkart.android.proteus.parser.custom;
 import android.graphics.drawable.Drawable;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
+import com.flipkart.android.proteus.processor.EventProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
+import com.flipkart.android.proteus.value.Value;
 import com.flipkart.android.proteus.view.ProteusCheckBox;
 
 import androidx.annotation.NonNull;
@@ -37,6 +40,9 @@ import androidx.annotation.Nullable;
  * Created by prateek.dixit on 1/8/15.
  */
 public class CheckBoxParser<T extends CheckBox> extends ViewTypeParser<T> {
+  private Value checkedValue;
+  private Value unCheckedValue;
+  private Value defaultValue;
 
   @NonNull
   @Override
@@ -73,5 +79,45 @@ public class CheckBoxParser<T extends CheckBox> extends ViewTypeParser<T> {
         view.setChecked(Boolean.parseBoolean(value));
       }
     });
+
+    addAttributeProcessor(Attributes.CheckBox.OnCheckedChange, new EventProcessor<T>() {
+
+      @Override
+      public void setOnEventListener(T view, Value value) {
+        defaultValue = value;
+        registerCheckboxListener(this, view);
+      }
+    });
+
+    addAttributeProcessor(Attributes.CheckBox.OnChecked, new EventProcessor<T>() {
+
+      @Override
+      public void setOnEventListener(T view, Value value) {
+        checkedValue = value;
+        registerCheckboxListener(this, view);
+      }
+    });
+
+    addAttributeProcessor(Attributes.CheckBox.OnUnChecked, new EventProcessor<T>() {
+
+      @Override
+      public void setOnEventListener(T view, Value value) {
+        unCheckedValue = value;
+        registerCheckboxListener(this, view);
+      }
+    });
+  }
+
+  private void registerCheckboxListener(EventProcessor<T> eventProcessor, T view) {
+    final CompoundButton.OnCheckedChangeListener checkedChangeListener = (buttonView, isChecked) -> {
+      if (isChecked && checkedValue != null) {
+        eventProcessor.trigger(Attributes.CheckBox.OnChecked, checkedValue, (ProteusView) view);
+      } else if (!isChecked && unCheckedValue != null) {
+        eventProcessor.trigger(Attributes.CheckBox.OnUnChecked, unCheckedValue, (ProteusView) view);
+      } else if (defaultValue != null) {
+        eventProcessor.trigger(Attributes.CheckBox.OnCheckedChange, defaultValue, (ProteusView) view);
+      }
+    };
+    view.setOnCheckedChangeListener(checkedChangeListener);
   }
 }

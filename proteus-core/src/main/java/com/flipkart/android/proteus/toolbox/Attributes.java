@@ -191,6 +191,9 @@ public class Attributes {
     public static class CheckBox {
         public static final String Checked = "checked";
         public static final String Button = "button";
+        public static final String OnCheckedChange = "onCheckedChange";
+        public static final String OnChecked = "onChecked";
+        public static final String OnUnChecked = "onUnChecked";
     }
 
     public static class RadioButton {
