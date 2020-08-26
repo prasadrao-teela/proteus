@@ -16,10 +16,12 @@
 
 package com.flipkart.android.proteus.parser.custom;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
@@ -89,5 +91,23 @@ public class ImageViewParser<T extends ImageView> extends ViewTypeParser<T> {
         }
       }
     });
+
+    addAttributeProcessor(Attributes.ImageView.Url, new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        Glide.with(view.getContext()).load(value).into(view);
+      }
+    });
+
+    addAttributeProcessor(Attributes.ImageView.GifSrc,  new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        Glide.with(view.getContext()).load(getImage(view.getContext(),value)).into(view);
+      }
+    });
+  }
+
+  public int getImage(Context context, String imageName) {
+    return context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
   }
 }

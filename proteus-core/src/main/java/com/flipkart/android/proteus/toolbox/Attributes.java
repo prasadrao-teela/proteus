@@ -207,6 +207,8 @@ public class Attributes {
         public static final String Src = "src";
         public static final String ScaleType = "scaleType";
         public static final String AdjustViewBounds = "adjustViewBounds";
+        public static final String Url = "url";
+        public static final String GifSrc = "gifSrc";
     }
 
     public static class ViewGroup {
