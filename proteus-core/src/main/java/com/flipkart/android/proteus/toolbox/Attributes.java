@@ -184,6 +184,8 @@ public class Attributes {
         public static final String showPasswordDrawable = "showPasswordDrawable";
         public static final String hidePasswordDrawable = "hidePasswordDrawable";
         public static final String onOtpCompleted = "onOtpCompleted";
+        public static final String onTextEmpty = "onTextEmpty";
+        public static final String onTextNonEmpty = "onTextNonEmpty";
 
         private EditText() {}
     }

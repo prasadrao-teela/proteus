@@ -487,6 +487,21 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
       }
     });
 
+    addAttributeProcessor(Attributes.View.Focusable, new BooleanAttributeProcessor<V>() {
+      @Override
+      public void setBoolean(V view, boolean value) {
+        view.setFocusable(value);
+        view.requestFocus();
+      }
+    });
+
+    addAttributeProcessor(Attributes.View.FocusableInTouchMode, new BooleanAttributeProcessor<V>() {
+      @Override
+      public void setBoolean(V view, boolean value) {
+        view.setFocusableInTouchMode(value);
+      }
+    });
+
     addAttributeProcessor(Attributes.View.Selected, new BooleanAttributeProcessor<V>() {
       @Override
       public void setBoolean(V view, boolean value) {

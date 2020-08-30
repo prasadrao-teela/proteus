@@ -35,12 +35,14 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
+import com.flipkart.android.proteus.processor.EventProcessor;
 import com.flipkart.android.proteus.processor.NumberAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.util.InputTypes;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
+import com.flipkart.android.proteus.value.Value;
 import com.flipkart.android.proteus.view.ProteusEditText;
 
 import java.lang.reflect.Field;
@@ -137,6 +139,46 @@ public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 hidePasswordDrawable = drawable;
+            }
+        });
+
+        addAttributeProcessor(Attributes.EditText.onTextEmpty, new EventProcessor<T>() {
+            @Override
+            public void setOnEventListener(T view, Value value) {
+                    view.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            if(s.toString().trim().isEmpty()){
+                                trigger(Attributes.EditText.onTextEmpty,value,(ProteusView) view);
+                            }
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) { }
+                    });
+            }
+        });
+
+        addAttributeProcessor(Attributes.EditText.onTextNonEmpty, new EventProcessor<T>() {
+            @Override
+            public void setOnEventListener(T view, Value value) {
+                view.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if(!s.toString().trim().isEmpty()){
+                            trigger(Attributes.EditText.onTextNonEmpty,value,(ProteusView) view);
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) { }
+                });
             }
         });
     }
