@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.MotionEvent;
@@ -82,7 +83,7 @@ public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
         addAttributeProcessor(Attributes.EditText.maxLength, new NumberAttributeProcessor<T>() {
             @Override
             public void setNumber(T view, @NonNull Number value) {
-                view.setFilters(new InputFilter[]{new InputFilter.LengthFilter(value.intValue())});
+                view.setFilters(addInputFilter(view.getFilters(), new InputFilter.LengthFilter(value.intValue())));
             }
         });
 
@@ -181,6 +182,40 @@ public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
                 });
             }
         });
+
+        addAttributeProcessor(Attributes.EditText.digits, new StringAttributeProcessor<T>() {
+            @Override
+            public void setString(T view, String value) {
+                view.setFilters(addInputFilter(view.getFilters(), (source, start, end, dest, dstart, dend) -> {
+                    if (source instanceof SpannableStringBuilder) {
+                        SpannableStringBuilder sourceAsSpannableBuilder = (SpannableStringBuilder)source;
+                        for (int i = end - 1; i >= start; i--) {
+                            char currentChar = source.charAt(i);
+                            if (!value.contains(String.valueOf(currentChar))) {
+                                sourceAsSpannableBuilder.delete(i, i+1);
+                            }
+                        }
+                        return source;
+                    } else {
+                        StringBuilder filteredStringBuilder = new StringBuilder();
+                        for (int i = start; i < end; i++) {
+                            char currentChar = source.charAt(i);
+                            if (value.contains(String.valueOf(currentChar))) {
+                                filteredStringBuilder.append(currentChar);
+                            }
+                        }
+                        return filteredStringBuilder.toString();
+                    }
+                }));
+            }
+        });
+
+        addAttributeProcessor(Attributes.TextView.TextAllCaps, new StringAttributeProcessor<T>() {
+            @Override
+            public void setString(T view, String value) {
+                view.setFilters(addInputFilter(view.getFilters(), new InputFilter.AllCaps()));
+            }
+        });
     }
 
     private void nextAutoFocus(EditText editText, String value) {
@@ -239,5 +274,11 @@ public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
             e.printStackTrace();
         }
         return length;
+    }
+    InputFilter[] addInputFilter(InputFilter[] array, InputFilter inputFilter){
+        InputFilter[] copy = new InputFilter[array.length + 1];
+        System.arraycopy(array, 0, copy, 0, array.length);
+        copy[array.length] = inputFilter;
+        return copy;
     }
 }

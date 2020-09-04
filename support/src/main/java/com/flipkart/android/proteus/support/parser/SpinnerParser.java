@@ -3,6 +3,7 @@ package com.flipkart.android.proteus.support.parser;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.SpinnerAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,8 +14,13 @@ import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
+import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.EventProcessor;
+import com.flipkart.android.proteus.processor.NumberAttributeProcessor;
+import com.flipkart.android.proteus.processor.ObjectAttributeProcessor;
+import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.support.adapter.ProteusSpinnerAdapter;
+import com.flipkart.android.proteus.support.adapter.SimpleSpinnerAdapter;
 import com.flipkart.android.proteus.support.adapter.SpinnerAdapterFactory;
 import com.flipkart.android.proteus.support.view.ProteusSpinner;
 import com.flipkart.android.proteus.toolbox.Attributes;
@@ -108,6 +114,17 @@ public class SpinnerParser<V extends AppCompatSpinner> extends ViewTypeParser<V>
 
                     }
                 });
+            }
+        });
+
+        addAttributeProcessor("selectDefaultItem", new BooleanAttributeProcessor<V>() {
+            @Override
+            public void setBoolean(V view, boolean value) {
+                SimpleSpinnerAdapter adapter = (SimpleSpinnerAdapter) view.getAdapter();
+                if(adapter != null){
+                    int position = adapter.getDefaultSelectedItem();
+                    view.setSelection(position);
+                }
             }
         });
     }

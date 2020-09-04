@@ -23,6 +23,7 @@ public class SimpleSpinnerAdapter extends ProteusSpinnerAdapter {
     private static final String ATTRIBUTE_ITEM_LAYOUT = "item-layout";
     private static final String ATTRIBUTE_ITEM_COUNT = "item-count";
     private static final String ATTRIBUTE_ITEMS = "items";
+    private static final String ATTRIBUTE_SELECTED = "selected";
 
     public static final Builder<SimpleSpinnerAdapter> BUILDER = (view, config) -> {
         Layout layout = config.getAsObject().getAsLayout(ATTRIBUTE_ITEM_LAYOUT);
@@ -85,5 +86,16 @@ public class SimpleSpinnerAdapter extends ProteusSpinnerAdapter {
         this.data.add(ATTRIBUTE_ITEMS, data);
         count = data.size();
         notifyDataSetChanged();
+    }
+
+    public int getDefaultSelectedItem(){
+        Array items = this.data.getAsArray(ATTRIBUTE_ITEMS);
+        for (int i = 0; i < items.size(); i++) {
+            ObjectValue objectValue = DataContext.create(context, data, i, scope).getData();
+            if(objectValue.getAsBoolean(ATTRIBUTE_SELECTED,false)){
+                return i;
+            }
+        }
+        return 0;
     }
 }
