@@ -187,6 +187,8 @@ public class Attributes {
         public static final String onOtpCompleted = "onOtpCompleted";
         public static final String onTextEmpty = "onTextEmpty";
         public static final String onTextNonEmpty = "onTextNonEmpty";
+        public static final String focusOff = "focusOff";
+        public static final String focusOn = "focusOn";
 
         private EditText() {}
     }

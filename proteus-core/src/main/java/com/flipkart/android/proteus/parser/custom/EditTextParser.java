@@ -17,6 +17,7 @@
 package com.flipkart.android.proteus.parser.custom;
 
 import android.annotation.SuppressLint;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -58,6 +59,8 @@ public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
     private static final String FOCUS_LEFT = "left";
     private final int DRAWABLE_RIGHT = 2;
     private Drawable showPasswordDrawable, hidePasswordDrawable;
+    private Value focusOnValue;
+    private Value focusOffValue;
 
     @NonNull
     @Override
@@ -90,7 +93,9 @@ public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
         addAttributeProcessor(Attributes.EditText.inputType, new StringAttributeProcessor<T>() {
             @Override
             public void setString(T view, String value) {
+                Typeface typeface = view.getTypeface();
                 view.setInputType(InputTypes.getInputType(value));
+                view.setTypeface(typeface);
             }
         });
         addAttributeProcessor(Attributes.EditText.nextAutoFocus, new StringAttributeProcessor<T>() {
@@ -216,6 +221,22 @@ public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
                 view.setFilters(addInputFilter(view.getFilters(), new InputFilter.AllCaps()));
             }
         });
+
+        addAttributeProcessor(Attributes.EditText.focusOn, new EventProcessor<T>() {
+            @Override
+            public void setOnEventListener(T view, Value value) {
+                focusOnValue = value;
+                registerFocusEvent(this, view);
+            }
+        });
+
+        addAttributeProcessor(Attributes.EditText.focusOff, new EventProcessor<T>() {
+            @Override
+            public void setOnEventListener(T view, Value value) {
+                focusOffValue = value;
+                registerFocusEvent(this, view);
+            }
+        });
     }
 
     private void nextAutoFocus(EditText editText, String value) {
@@ -280,5 +301,15 @@ public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
         System.arraycopy(array, 0, copy, 0, array.length);
         copy[array.length] = inputFilter;
         return copy;
+    }
+
+    private void registerFocusEvent(EventProcessor<T> eventProcessor,T view){
+        view.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                eventProcessor.trigger(Attributes.EditText.focusOn, focusOnValue, (ProteusView) view);
+            } else {
+                eventProcessor.trigger(Attributes.EditText.focusOff, focusOffValue, (ProteusView) view);
+            }
+        });
     }
 }

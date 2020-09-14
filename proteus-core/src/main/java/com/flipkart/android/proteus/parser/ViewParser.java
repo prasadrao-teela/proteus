@@ -241,6 +241,13 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
       }
     });
 
+    addAttributeProcessor(Attributes.View.LongClickable, new BooleanAttributeProcessor<V>() {
+      @Override
+      public void setBoolean(V view, boolean value) {
+        view.setLongClickable(value);
+      }
+    });
+
     addAttributeProcessor(Attributes.View.Margin, new DimensionAttributeProcessor<V>() {
       @Override
       public void setDimension(V view, float dimension) {

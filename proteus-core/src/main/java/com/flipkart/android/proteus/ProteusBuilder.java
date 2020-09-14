@@ -32,6 +32,7 @@ import com.flipkart.android.proteus.parser.custom.HorizontalScrollViewParser;
 import com.flipkart.android.proteus.parser.custom.ImageButtonParser;
 import com.flipkart.android.proteus.parser.custom.ImageViewParser;
 import com.flipkart.android.proteus.parser.custom.LinearLayoutParser;
+import com.flipkart.android.proteus.parser.custom.NestedScrollViewParser;
 import com.flipkart.android.proteus.parser.custom.ProgressBarParser;
 import com.flipkart.android.proteus.parser.custom.ProgressIndicatorParser;
 import com.flipkart.android.proteus.parser.custom.RadioButtonParser;
@@ -69,6 +70,7 @@ public class ProteusBuilder {
     builder.register(new LinearLayoutParser<>());
     builder.register(new FrameLayoutParser<>());
     builder.register(new ScrollViewParser<>());
+    builder.register(new NestedScrollViewParser<>());
     builder.register(new HorizontalScrollViewParser<>());
     builder.register(new ImageViewParser<>());
     builder.register(new TextViewParser<>());

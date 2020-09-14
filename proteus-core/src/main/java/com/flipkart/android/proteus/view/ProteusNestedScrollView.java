@@ -16,43 +16,31 @@
 
 package com.flipkart.android.proteus.view;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Typeface;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.util.InputTypes;
-
 import androidx.annotation.NonNull;
+import androidx.core.widget.NestedScrollView;
 
-/**
- * EditText
- *
- * @author aditya.sharat
- */
-public class ProteusEditText extends android.widget.EditText implements ProteusView {
+import com.flipkart.android.proteus.ProteusView;
+
+public class ProteusNestedScrollView extends NestedScrollView implements ProteusView {
 
   private Manager viewManager;
 
-  public ProteusEditText(Context context) {
+  public ProteusNestedScrollView(Context context) {
     super(context);
   }
 
-  public ProteusEditText(Context context, AttributeSet attrs) {
+  public ProteusNestedScrollView(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public ProteusEditText(Context context, AttributeSet attrs, int defStyleAttr) {
+  public ProteusNestedScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-  public ProteusEditText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
-  }
 
   @Override
   public Manager getViewManager() {
@@ -68,14 +56,5 @@ public class ProteusEditText extends android.widget.EditText implements ProteusV
   @Override
   public View getAsView() {
     return this;
-  }
-
-  public void setInputType(String inputType) {
-    Typeface typeface = getTypeface();
-    setInputType(InputTypes.getInputType(inputType));
-    if(getText() != null){
-      setSelection(getText().length());
-    }
-    setTypeface(typeface);
   }
 }
