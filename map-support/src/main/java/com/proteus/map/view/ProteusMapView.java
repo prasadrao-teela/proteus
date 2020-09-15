@@ -1,10 +1,15 @@
 package com.proteus.map.view;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.pm.PackageManager;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
@@ -16,6 +21,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.proteus.map.client.ProteusGoogleApiClient;
+import com.proteus.map.utils.LocationUtil;
 
 public class ProteusMapView extends MapView implements ProteusView, LifecycleObserver{
     private Manager manager;
@@ -45,11 +51,11 @@ public class ProteusMapView extends MapView implements ProteusView, LifecycleObs
         return this;
     }
 
-    public void setZoomLevel(int zoomLevel){
+    public void setZoomLevel(int zoomLevel) {
         this.zoomLevel = zoomLevel;
     }
 
-    public void setInterval(int interval){
+    public void setInterval(int interval) {
         this.interval = interval;
     }
 
@@ -61,7 +67,7 @@ public class ProteusMapView extends MapView implements ProteusView, LifecycleObs
         this.priority = priority;
     }
 
-    public int getZoomLevel(){
+    public int getZoomLevel() {
         return zoomLevel;
     }
 
@@ -78,8 +84,8 @@ public class ProteusMapView extends MapView implements ProteusView, LifecycleObs
     }
 
     @SuppressLint("MissingPermission")
-    public void registerGoogleApiClient(GoogleMap googleMap){
-        if(googleMap != null){
+    public void registerGoogleApiClient(GoogleMap googleMap) {
+        if (googleMap != null) {
             Fragment fragment = null;
             try {
                 fragment = FragmentManager.findFragment(this);
@@ -89,11 +95,46 @@ public class ProteusMapView extends MapView implements ProteusView, LifecycleObs
             if(fragment  != null){
                 fragment.getLifecycle().addObserver(this);
             }
-            googleMap.setMyLocationEnabled(true);
+            if (isLocationPermissionEnabled(getContext())) {
+                googleMap.setMyLocationEnabled(true);
+            } else {
+                requestLocationPermission(getContext());
+            }
+            googleMap.setOnMyLocationButtonClickListener(() -> {
+                LocationUtil.getInstance().enableGps(getActivity(getContext()), isGPSEnabled -> {
+                    if(proteusGoogleApiClient != null){
+                        proteusGoogleApiClient.buildGoogleApiClient();
+                    }
+                });
+                return false;
+            });
             googleMap.getUiSettings().setMyLocationButtonEnabled(true);
             proteusGoogleApiClient = new ProteusGoogleApiClient(getContext(),this, googleMap);
             proteusGoogleApiClient.buildGoogleApiClient();
         }
+    }
+
+    private boolean isLocationPermissionEnabled(Context context){
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestLocationPermission(Context context){
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(context), new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},1000);
+        }
+    }
+
+    private Activity getActivity(Context context) {
+        if (context == null) {
+            return null;
+        } else if (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity) context;
+            } else {
+                return getActivity(((ContextWrapper) context).getBaseContext());
+            }
+        }
+        return null;
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)

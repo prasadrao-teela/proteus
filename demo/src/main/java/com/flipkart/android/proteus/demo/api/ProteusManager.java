@@ -33,6 +33,7 @@ import com.flipkart.android.proteus.support.v7.CardViewModule;
 import com.flipkart.android.proteus.support.v7.RecyclerViewModule;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
+import com.proteus.map.MapSupportModule;
 import com.proteus.web.WebSupportModule;
 
 import java.util.HashSet;
@@ -64,6 +65,7 @@ public class ProteusManager {
             .register(new CircleViewParser())
             .register(SupportModule.create())
             .register(WebSupportModule.create())
+            .register(MapSupportModule.create())
             .build();
 
         ProteusTypeAdapterFactory.PROTEUS_INSTANCE_HOLDER.setProteus(proteus);
