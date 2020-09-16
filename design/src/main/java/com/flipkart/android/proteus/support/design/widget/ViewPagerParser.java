@@ -14,7 +14,9 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.managers.AdapterBasedViewManager;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
+import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
+import com.flipkart.android.proteus.processor.EventProcessor;
 import com.flipkart.android.proteus.processor.NumberAttributeProcessor;
 import com.flipkart.android.proteus.support.design.adapter.ProteusPagerAdapter;
 import com.flipkart.android.proteus.support.design.adapter.ViewPagerAdapterFactory;
@@ -37,6 +39,9 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
     @NonNull private final ViewPagerAdapterFactory adapterFactory;
 
     private TabLayout tabLayout;
+    private Value onPageStartValue;
+    private Value onPageEndValue;
+    private Value onPageChangedValue;
 
     public ViewPagerParser(@NonNull ViewPagerAdapterFactory adapterFactory) {
         this.adapterFactory = adapterFactory;
@@ -156,5 +161,56 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
                 }
             }
         });
+
+        addAttributeProcessor("onPageStart", new EventProcessor<V>() {
+            @Override
+            public void setOnEventListener(V view, Value value) {
+                onPageStartValue = value;
+                registerOnPageListener(this, view);
+            }
+        });
+
+        addAttributeProcessor("onPageEnd", new EventProcessor<V>() {
+            @Override
+            public void setOnEventListener(V view, Value value) {
+                onPageEndValue = value;
+                registerOnPageListener(this, view);
+            }
+        });
+
+        addAttributeProcessor("onPageChanged", new EventProcessor<V>() {
+            @Override
+            public void setOnEventListener(V view, Value value) {
+                onPageChangedValue = value;
+                registerOnPageListener(this, view);
+                registerOnPageListener(this, view);
+                registerOnPageListener(this, view);
+            }
+        });
+    }
+
+    private void registerOnPageListener(EventProcessor<V> eventProcessor, V view) {
+        final ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (onPageStartValue != null && position == 0) {
+                    eventProcessor.trigger("onPageStart", onPageStartValue, (ProteusView) view);
+                } else if (onPageEndValue != null && view.getAdapter() != null && position == view.getAdapter().getCount() - 1) {
+                    eventProcessor.trigger("onPageEnd", onPageEndValue, (ProteusView) view);
+                } else if (onPageChangedValue != null) {
+                    eventProcessor.trigger("onPageChanged", onPageChangedValue, (ProteusView) view);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        };
+        view.clearOnPageChangeListeners();      //Clear If existing onPageListener is registered
+        view.addOnPageChangeListener(onPageChangeListener);
     }
 }

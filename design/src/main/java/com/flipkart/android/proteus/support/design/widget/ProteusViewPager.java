@@ -34,4 +34,16 @@ public class ProteusViewPager extends ViewPager implements ProteusView {
     public View getAsView() {
         return this;
     }
+
+    public void moveToNextPage() {
+        if (getAdapter() != null && getCurrentItem() < getAdapter().getCount() - 1) {
+            setCurrentItem(getCurrentItem() + 1);
+        }
+    }
+
+    public void moveToPreviousPage() {
+        if (getAdapter() != null && getCurrentItem() > 0) {
+            setCurrentItem(getCurrentItem() - 1);
+        }
+    }
 }
