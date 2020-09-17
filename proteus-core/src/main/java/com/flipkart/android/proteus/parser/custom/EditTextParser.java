@@ -305,9 +305,9 @@ public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
 
     private void registerFocusEvent(EventProcessor<T> eventProcessor,T view){
         view.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
+            if (hasFocus && focusOnValue != null) {
                 eventProcessor.trigger(Attributes.EditText.focusOn, focusOnValue, (ProteusView) view);
-            } else {
+            } else if (focusOffValue != null) {
                 eventProcessor.trigger(Attributes.EditText.focusOff, focusOffValue, (ProteusView) view);
             }
         });
