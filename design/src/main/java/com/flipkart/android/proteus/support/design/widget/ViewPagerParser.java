@@ -15,6 +15,7 @@ import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.managers.AdapterBasedViewManager;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
+import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.EventProcessor;
 import com.flipkart.android.proteus.processor.NumberAttributeProcessor;
@@ -159,6 +160,21 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
                         }
                     }
                 }
+            }
+        });
+
+        addAttributeProcessor("clipToPadding", new BooleanAttributeProcessor<V>() {
+            @Override
+            public void setBoolean(V view, boolean value) {
+                view.setClipToPadding(value);
+            }
+        });
+
+        addAttributeProcessor("pageMargin", new DimensionAttributeProcessor<V>() {
+            @Override
+            public void setDimension(V view, float value) {
+                view.setPageMargin((int) value);
+
             }
         });
 
