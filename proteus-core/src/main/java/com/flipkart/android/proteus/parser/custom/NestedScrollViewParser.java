@@ -26,6 +26,7 @@ import androidx.core.widget.NestedScrollView;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
+import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.value.Layout;
@@ -55,6 +56,13 @@ public class NestedScrollViewParser<T extends NestedScrollView> extends ViewType
 
   @Override
   protected void addAttributeProcessors() {
+
+    addAttributeProcessor(Attributes.HorizontalScrollView.FillViewPort, new BooleanAttributeProcessor<T>() {
+      @Override
+      public void setBoolean(T view, boolean value) {
+        view.setFillViewport(value);
+      }
+    });
 
     addAttributeProcessor(Attributes.ScrollView.Scrollbars, new StringAttributeProcessor<T>() {
       @Override
