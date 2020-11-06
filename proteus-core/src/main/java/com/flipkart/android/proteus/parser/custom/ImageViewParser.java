@@ -17,7 +17,10 @@
 package com.flipkart.android.proteus.parser.custom;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
+import android.util.Base64;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -105,7 +108,19 @@ public class ImageViewParser<T extends ImageView> extends ViewTypeParser<T> {
         Glide.with(view.getContext()).load(getImage(view.getContext(),value)).into(view);
       }
     });
-  }
+
+      addAttributeProcessor("base64", new StringAttributeProcessor<T>() {
+        @Override
+        public void setString(T view, String value) {
+          if (TextUtils.isEmpty(value)) {
+            byte[] imageAsBytes = Base64.decode(value.getBytes(), Base64.DEFAULT);
+            if (imageAsBytes.length > 0) {
+              view.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+            }
+          }
+        }
+      });
+    }
 
   public int getImage(Context context, String imageName) {
     return context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
