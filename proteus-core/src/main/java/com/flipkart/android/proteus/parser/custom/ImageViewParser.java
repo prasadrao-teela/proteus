@@ -112,7 +112,7 @@ public class ImageViewParser<T extends ImageView> extends ViewTypeParser<T> {
       addAttributeProcessor("base64", new StringAttributeProcessor<T>() {
         @Override
         public void setString(T view, String value) {
-          if (TextUtils.isEmpty(value)) {
+          if (!TextUtils.isEmpty(value)) {
             byte[] imageAsBytes = Base64.decode(value.getBytes(), Base64.DEFAULT);
             if (imageAsBytes.length > 0) {
               view.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
