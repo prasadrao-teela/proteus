@@ -34,6 +34,7 @@ import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.EventProcessor;
 import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.RecyclerViewAdapterFactory;
+import com.flipkart.android.proteus.support.v7.adapter.SingleSelectionListAdapter;
 import com.flipkart.android.proteus.support.v7.decorator.MarginItemDecoration;
 import com.flipkart.android.proteus.support.v7.layoutmanager.LayoutManagerFactory;
 import com.flipkart.android.proteus.value.AttributeResource;
@@ -223,6 +224,17 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
                         (ProteusRecyclerViewAdapter<?>) view.getAdapter();
                 if (adapter != null) {
                     adapter.setOnNoItemSelectedListener((proteusView) -> trigger(ATTRIBUTE_NO_ITEM_SELECTED, value, proteusView));
+                }
+            }
+        });
+
+        addAttributeProcessor("selectDefaultItem", new BooleanAttributeProcessor<V>() {
+            @Override
+            public void setBoolean(V view, boolean value) {
+                ProteusRecyclerViewAdapter<?> adapter =
+                        (ProteusRecyclerViewAdapter<?>) view.getAdapter();
+                if(adapter instanceof SingleSelectionListAdapter){
+                    ((SingleSelectionListAdapter)adapter).autoSelectItem();
                 }
             }
         });

@@ -21,6 +21,7 @@ import java.util.Objects;
  **/
 public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<ProteusViewHolder> {
 
+    private ProteusContext context;
     private static final String ATTRIBUTE_ITEM_LAYOUT = "item-layout";
     private static final String ATTRIBUTE_ITEM_COUNT = "item-count";
     private static final String ATTRIBUTE_ITEMS = "items";
@@ -33,7 +34,7 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
         ObjectValue data = view.getViewManager().getDataContext().getData();
         ProteusContext context = (ProteusContext) view.getContext();
 
-        return new SingleSelectionListAdapter(context.getInflater(), data,
+        return new SingleSelectionListAdapter(context, context.getInflater(), data,
             Objects.requireNonNull(layout),
             count != null ? count : 0);
     };
@@ -45,9 +46,10 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
     private Layout layout;
     private Map<String, Value> scope;
 
-    private SingleSelectionListAdapter(ProteusLayoutInflater inflater, ObjectValue data,
-        Layout layout, int count) {
+    private SingleSelectionListAdapter(ProteusContext context, ProteusLayoutInflater inflater, ObjectValue data,
+                                       Layout layout, int count) {
         System.out.println("debug: ========== SingleSelectionListAdapter ===============");
+        this.context = context;
         this.inflater = inflater;
         this.data = data;
         this.count = count;
@@ -128,6 +130,17 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
     public void updateData(Array data) {
         this.data.add(ATTRIBUTE_ITEMS, data);
         count = data.size();
+        notifyDataSetChanged();
+    }
+    public void autoSelectItem() {
+        Array items = this.data.getAsArray(ATTRIBUTE_ITEMS);
+        for (int i = 0; i < items.size(); i++) {
+            ObjectValue objectValue = DataContext.create(context, data, i, scope).getData();
+            if(objectValue.getAsBoolean(ATTRIBUTE_SELECTED,false)){
+                items.get(i).getAsObject().addProperty(ATTRIBUTE_SELECTED,true);
+                break;
+            }
+        }
         notifyDataSetChanged();
     }
 }
