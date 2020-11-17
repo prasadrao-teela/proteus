@@ -27,16 +27,21 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
     private static final String ATTRIBUTE_ITEMS = "items";
     private static final String ATTRIBUTE_ITEM = "item";
     private static final String ATTRIBUTE_SELECTED = "selected";
+    private static final String ENABLED = "enabled";
 
     public static final Builder<SingleSelectionListAdapter> BUILDER = (view, config) -> {
         Layout layout = config.getAsObject().getAsLayout(ATTRIBUTE_ITEM_LAYOUT);
         Integer count = config.getAsObject().getAsInteger(ATTRIBUTE_ITEM_COUNT);
         ObjectValue data = view.getViewManager().getDataContext().getData();
         ProteusContext context = (ProteusContext) view.getContext();
-
+        Value disableSelectionValue =  config.getAsObject().get(ENABLED);
+        Boolean enabled = true;
+        if(disableSelectionValue != null){
+            enabled = disableSelectionValue.getAsBoolean();
+        }
         return new SingleSelectionListAdapter(context, context.getInflater(), data,
             Objects.requireNonNull(layout),
-            count != null ? count : 0);
+            count != null ? count : 0, enabled);
     };
 
     private ProteusLayoutInflater inflater;
@@ -45,9 +50,10 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
     private int count;
     private Layout layout;
     private Map<String, Value> scope;
+    private Boolean enabled;
 
     private SingleSelectionListAdapter(ProteusContext context, ProteusLayoutInflater inflater, ObjectValue data,
-                                       Layout layout, int count) {
+                                       Layout layout, int count, boolean enabled) {
         System.out.println("debug: ========== SingleSelectionListAdapter ===============");
         this.context = context;
         this.inflater = inflater;
@@ -55,6 +61,7 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
         this.count = count;
         this.layout = new Layout(layout.type, layout.attributes, null, layout.extras);
         this.scope = layout.data;
+        this.enabled = enabled;
     }
 
     @NonNull
@@ -73,6 +80,7 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
         if (item != null) {
             Boolean selected = item.getAsBoolean(ATTRIBUTE_SELECTED);
             holder.view.getAsView().setSelected(selected != null && selected);
+            if (!enabled) return;
             holder.view.getAsView().setOnClickListener(v -> {
                 Array items = this.data.getAsArray(ATTRIBUTE_ITEMS);
                 for (int i = 0; i < items.size(); i++) {

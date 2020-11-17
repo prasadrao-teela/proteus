@@ -288,6 +288,9 @@ public class Primitive extends Value {
       double b = other.getAsNumber().doubleValue();
       return a == b || (Double.isNaN(a) && Double.isNaN(b));
     }
+    if (isString() && other.isString()) {
+      return getAsString().equalsIgnoreCase(other.getAsString());
+    }
     return value.equals(other.value);
   }
 
