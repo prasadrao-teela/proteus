@@ -280,5 +280,6 @@ public class Attributes {
         public static final String interval = "interval";
         public static final String fastestInterval = "fastestInterval";
         public static final String priority = "priority";
+        public static final String disableAutoFetchLocation = "disableAutoFetchLocation";
     }
 }

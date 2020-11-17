@@ -29,6 +29,7 @@ public class ProteusMapView extends MapView implements ProteusView, LifecycleObs
     private int interval = 1000;
     private int fastestInterval = 1000;
     private int priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
+    private boolean disableAutoFetchLocation;
     private ProteusGoogleApiClient proteusGoogleApiClient;
     public ProteusMapView(Context context) {
         super(context);
@@ -83,6 +84,14 @@ public class ProteusMapView extends MapView implements ProteusView, LifecycleObs
         return priority;
     }
 
+    public boolean isDisableAutoFetchLocation() {
+        return disableAutoFetchLocation;
+    }
+
+    public void setDisableAutoFetchLocation(boolean disableAutoFetchLocation) {
+        this.disableAutoFetchLocation = disableAutoFetchLocation;
+    }
+
     @SuppressLint("MissingPermission")
     public void registerGoogleApiClient(GoogleMap googleMap) {
         if (googleMap != null) {
@@ -103,6 +112,7 @@ public class ProteusMapView extends MapView implements ProteusView, LifecycleObs
             googleMap.setOnMyLocationButtonClickListener(() -> {
                 LocationUtil.getInstance().enableGps(getActivity(getContext()), isGPSEnabled -> {
                     if(proteusGoogleApiClient != null){
+                        disableAutoFetchLocation = false;
                         proteusGoogleApiClient.buildGoogleApiClient();
                     }
                 });

@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
+import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.EventProcessor;
 import com.flipkart.android.proteus.processor.NumberAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
@@ -76,35 +77,44 @@ public class MapViewParser <V extends ProteusMapView> extends ViewTypeParser<V> 
             }
         });
 
+        addAttributeProcessor(Attributes.MapView.disableAutoFetchLocation, new BooleanAttributeProcessor<V>() {
+            @Override
+            public void setBoolean(V view, boolean value) {
+                view.setDisableAutoFetchLocation(value);
+            }
+        });
+
         addAttributeProcessor(Attributes.MapView.onLocationChanged, new EventProcessor<V>() {
             @Override
             public void setOnEventListener(final V view, final Value value) {
                 view.getMapAsync(googleMap -> {
                     view.registerGoogleApiClient(googleMap);
                     googleMap.setOnCameraIdleListener(() -> {
-                        LatLng latLng = googleMap.getCameraPosition().target;
-                        googleMap.clear();
-                        googleMap.addMarker(new MarkerOptions().position(latLng));
-                        double latitude = latLng.latitude;
-                        double longitude = latLng.longitude;
-                        ObjectValue locationObjectValue = new ObjectValue();
-                        if (value.isArray() && ((Array) value).size() > 0) {
-                            ObjectValue objectValue = value.getAsArray().get(0).getAsObject();
-                            locationObjectValue.addProperty(Keys.LATITUDE,latitude);
-                            locationObjectValue.addProperty(Keys.LONGITUDE,longitude);
-                            ObjectValue dataObjectValue = objectValue.getAsObject(Keys.DATA);
-                            if (dataObjectValue != null) {
-                                dataObjectValue.add(Keys.LOCATION, locationObjectValue);
-                            } else {
+                        if(!view.isDisableAutoFetchLocation()) {
+                            LatLng latLng = googleMap.getCameraPosition().target;
+                            googleMap.clear();
+                            googleMap.addMarker(new MarkerOptions().position(latLng));
+                            double latitude = latLng.latitude;
+                            double longitude = latLng.longitude;
+                            ObjectValue locationObjectValue = new ObjectValue();
+                            if (value.isArray() && ((Array) value).size() > 0) {
+                                ObjectValue objectValue = value.getAsArray().get(0).getAsObject();
+                                locationObjectValue.addProperty(Keys.LATITUDE, latitude);
+                                locationObjectValue.addProperty(Keys.LONGITUDE, longitude);
+                                ObjectValue dataObjectValue = objectValue.getAsObject(Keys.DATA);
+                                if (dataObjectValue != null) {
+                                    dataObjectValue.add(Keys.LOCATION, locationObjectValue);
+                                } else {
+                                    objectValue.add(Keys.LOCATION, locationObjectValue);
+                                }
+                            } else if (value.isObject()) {
+                                ObjectValue objectValue = value.getAsObject();
+                                locationObjectValue.addProperty(Keys.LATITUDE, latitude);
+                                locationObjectValue.addProperty(Keys.LONGITUDE, longitude);
                                 objectValue.add(Keys.LOCATION, locationObjectValue);
                             }
-                        } else if(value.isObject()){
-                            ObjectValue objectValue = value.getAsObject();
-                            locationObjectValue.addProperty(Keys.LATITUDE,latitude);
-                            locationObjectValue.addProperty(Keys.LONGITUDE,longitude);
-                            objectValue.add(Keys.LOCATION,locationObjectValue);
+                            trigger(Attributes.MapView.onLocationChanged, value, view);
                         }
-                        trigger(Attributes.MapView.onLocationChanged, value, view);
                     });
                 });
             }
