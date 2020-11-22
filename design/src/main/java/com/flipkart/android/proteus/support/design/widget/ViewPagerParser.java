@@ -127,6 +127,13 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
             }
         });
 
+        addAttributeProcessor("currentItem", new NumberAttributeProcessor<V>() {
+            @Override
+            public void setNumber(V view, @NonNull Number value) {
+                view.setCurrentItem(value.intValue(), true);
+            }
+        });
+
         addAttributeProcessor("tabBackground", new DrawableResourceProcessor<V>() {
             @Override
             public void setDrawable(V view, Drawable drawable) {
