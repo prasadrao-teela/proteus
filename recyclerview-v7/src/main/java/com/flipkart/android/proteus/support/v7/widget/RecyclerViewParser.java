@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.flipkart.android.proteus.DataContext;
@@ -32,6 +33,7 @@ import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.EventProcessor;
+import com.flipkart.android.proteus.processor.NumberAttributeProcessor;
 import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.RecyclerViewAdapterFactory;
 import com.flipkart.android.proteus.support.v7.adapter.SingleSelectionListAdapter;
@@ -175,6 +177,19 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
             @Override
             public void setDimension(V view, float dimension) {
                 view.addItemDecoration(new MarginItemDecoration((int) dimension));
+            }
+        });
+        addAttributeProcessor("spanCount", new NumberAttributeProcessor<V>() {
+            @Override
+            public void setNumber(V view, @NonNull Number value) {
+               if(view.getLayoutManager() instanceof GridLayoutManager){
+                   GridLayoutManager gridLayoutManager = (GridLayoutManager) view.getLayoutManager();
+                   gridLayoutManager.setSpanCount(value.intValue());
+                   RecyclerView.Adapter adapter = view.getAdapter();
+                   if(adapter != null){
+                       adapter.notifyDataSetChanged();
+                   }
+               }
             }
         });
         //This flag is for controlling select/unSelect for singleSelectionRecyclerView Adapetr
