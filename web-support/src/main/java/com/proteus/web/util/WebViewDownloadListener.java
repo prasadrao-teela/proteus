@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.URLUtil;
+import android.widget.Toast;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -43,6 +44,7 @@ public class WebViewDownloadListener implements DownloadListener {
         DownloadManager downloadManager =
             (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         if (downloadManager != null) {
+            Toast.makeText(context, "Downloading file...", Toast.LENGTH_SHORT).show();
             downloadManager.enqueue(downloadRequest);
         }
     }
