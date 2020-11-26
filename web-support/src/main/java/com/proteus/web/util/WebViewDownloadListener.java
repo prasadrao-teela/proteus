@@ -30,9 +30,6 @@ public class WebViewDownloadListener implements DownloadListener {
     }
 
     public void download(String url, String userAgent, String contentDisposition, String mimeType) {
-        if (context.checkCallingOrSelfPermission(WRITE_EXTERNAL_STORAGE) !=
-            PackageManager.PERMISSION_GRANTED) { return; }
-
         DownloadManager.Request downloadRequest = new DownloadManager.Request(Uri.parse(url));
         downloadRequest.setMimeType(getMimeTypeFromUrl(url, mimeType));
         String cookie = CookieManager.getInstance().getCookie(url);

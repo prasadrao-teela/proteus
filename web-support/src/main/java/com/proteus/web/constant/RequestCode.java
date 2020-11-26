@@ -5,4 +5,5 @@ package com.proteus.web.constant;
  **/
 public class RequestCode {
     public static final int OPEN_FILE_CHOOSER = 23323;
+    public static final int PERMISSIONS = 23324;
 }

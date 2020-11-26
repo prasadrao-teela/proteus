@@ -1,6 +1,9 @@
 package com.proteus.web.client;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -8,17 +11,19 @@ import android.os.Message;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.proteus.web.constant.FileSelection;
+import com.proteus.web.constant.RequestCode;
 import com.proteus.web.util.FileChooserHelper;
 
 import java.util.Arrays;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 /**
  * Created by Prasad Rao on 09-06-2020 12:32
@@ -55,7 +60,6 @@ public class ProteusChromeClient extends WebChromeClient {
 
     private void showFileChooser(WebView webView, FileSelection fileSelectionType) {
         if (isPermissionGranted(webView.getContext(), READ_EXTERNAL_STORAGE) &&
-            isPermissionGranted(webView.getContext(), WRITE_EXTERNAL_STORAGE) &&
             isPermissionGranted(webView.getContext(), CAMERA)) {
             switch (fileSelectionType) {
                 case CAMERA:
@@ -68,7 +72,33 @@ public class ProteusChromeClient extends WebChromeClient {
                     FileChooserHelper.getInstance().openFileChooser(webView.getContext());
                     break;
             }
+        } else {
+            if (fileChooserHelper.getFilePathCallback() != null) {
+                this.fileChooserHelper.getFilePathCallback().onReceiveValue(null);
+                fileChooserHelper.setFilePathCallback(null);
+            }
+            Activity activity = getActivity(webView.getContext());
+            if (activity != null) {
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                        CAMERA}, RequestCode.PERMISSIONS);
+            } else {
+                Toast.makeText(webView.getContext(), "Please grant Storage & Camera permissions", Toast.LENGTH_SHORT).show();
+            }
         }
+    }
+
+
+    private Activity getActivity(Context context) {
+        if (context == null) {
+            return null;
+        } else if (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity) context;
+            } else {
+                return getActivity(((ContextWrapper) context).getBaseContext());
+            }
+        }
+        return null;
     }
 
     private FileSelection getFileSelectionType(FileChooserParams params) {
