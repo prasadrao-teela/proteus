@@ -90,6 +90,7 @@ public class MapViewParser <V extends ProteusMapView> extends ViewTypeParser<V> 
                 view.getMapAsync(googleMap -> {
                     view.registerGoogleApiClient(googleMap);
                     googleMap.setOnCameraIdleListener(() -> {
+                        view.getParent().requestDisallowInterceptTouchEvent(false);
                         if(!view.isDisableAutoFetchLocation()) {
                             LatLng latLng = googleMap.getCameraPosition().target;
                             googleMap.clear();
@@ -116,6 +117,8 @@ public class MapViewParser <V extends ProteusMapView> extends ViewTypeParser<V> 
                             trigger(Attributes.MapView.onLocationChanged, value, view);
                         }
                     });
+
+                    googleMap.setOnCameraMoveStartedListener(i -> view.getParent().requestDisallowInterceptTouchEvent(true));
                 });
             }
         });
