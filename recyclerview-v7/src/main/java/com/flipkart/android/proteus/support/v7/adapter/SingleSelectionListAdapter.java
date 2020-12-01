@@ -85,7 +85,7 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
                 Array items = this.data.getAsArray(ATTRIBUTE_ITEMS);
                 for (int i = 0; i < items.size(); i++) {
                     ObjectValue objectValue = items.get(i).getAsObject();
-                    if (isEnableUnSelect() && objectValue.getAsBoolean(ATTRIBUTE_SELECTED, false)) {
+                    if (objectValue.getAsBoolean(ATTRIBUTE_SELECTED, false)) {
                         objectValue.addProperty(ATTRIBUTE_SELECTED, false);
                     } else {
                         objectValue.addProperty(ATTRIBUTE_SELECTED, i == position);
