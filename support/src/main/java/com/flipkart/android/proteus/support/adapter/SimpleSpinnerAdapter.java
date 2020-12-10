@@ -75,7 +75,11 @@ public class SimpleSpinnerAdapter extends ProteusSpinnerAdapter {
         } else {
             view = (ProteusView) convertView;
         }
-
+        if (position == 0) {
+            view.getAsView().setAlpha(0.5f);
+        } else {
+            view.getAsView().setAlpha(1);
+        }
         ProteusView.Manager viewManager = view.getViewManager();
         ObjectValue data = getItem(position);
         viewManager.update(data);
@@ -88,6 +92,24 @@ public class SimpleSpinnerAdapter extends ProteusSpinnerAdapter {
         notifyDataSetChanged();
     }
 
+    @Override
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        View view = super.getDropDownView(position, convertView, parent);
+        if (position == 0) {
+            view.setAlpha(0.5f);
+            view.setFocusable(true);
+            view.setEnabled(true);
+            view.setClickable(true);
+        } else {
+            view.setAlpha(1);
+            view.setFocusable(false);
+            view.setEnabled(false);
+            view.setClickable(false);
+        }
+        return view;
+    }
+
+
     public int getDefaultSelectedItem(){
         Array items = this.data.getAsArray(ATTRIBUTE_ITEMS);
         for (int i = 0; i < items.size(); i++) {
@@ -97,5 +119,10 @@ public class SimpleSpinnerAdapter extends ProteusSpinnerAdapter {
             }
         }
         return 0;
+    }
+
+    public void addPromptMessage(Value value){
+        Array items = this.data.getAsArray(ATTRIBUTE_ITEMS);
+        items.add(0, value);
     }
 }

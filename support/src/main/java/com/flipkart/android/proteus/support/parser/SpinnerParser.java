@@ -104,9 +104,10 @@ public class SpinnerParser<V extends AppCompatSpinner> extends ViewTypeParser<V>
             public void setOnEventListener(V view, Value value) {
                 view.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> parent, View v, int position,
-                        long id) {
-                        trigger(Attributes.Spinner.onSpinnerItemSelected, value, (ProteusView) view);
+                    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+                        if (position > 0) {
+                            trigger(Attributes.Spinner.onSpinnerItemSelected, value, (ProteusView) view);
+                        }
                     }
 
                     @Override
@@ -126,6 +127,25 @@ public class SpinnerParser<V extends AppCompatSpinner> extends ViewTypeParser<V>
                     view.setSelection(position);
                 }
             }
+        });
+
+        addAttributeProcessor("promptMessage", new AttributeProcessor<V>() {
+            @Override
+            public void handleValue(V view, Value value) {
+                SimpleSpinnerAdapter adapter = (SimpleSpinnerAdapter) view.getAdapter();
+                if(adapter != null){
+                    adapter.addPromptMessage(value);
+                }
+            }
+
+            @Override
+            public void handleResource(V view, Resource resource) { }
+
+            @Override
+            public void handleAttributeResource(V view, AttributeResource attribute) {}
+
+            @Override
+            public void handleStyleResource(V view, StyleResource style) {}
         });
     }
 }
