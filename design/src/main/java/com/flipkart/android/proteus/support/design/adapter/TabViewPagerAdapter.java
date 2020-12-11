@@ -59,6 +59,12 @@ public class TabViewPagerAdapter extends ProteusPagerAdapter {
     }
 
     @Override
+    public Value getActions(int position){
+       ObjectValue objectValue =  data.getAsArray(ITEMS).get(position).getAsObject();
+       return objectValue.get(ACTIONS);
+    }
+
+    @Override
     public int getCount() {
         return count;
     }

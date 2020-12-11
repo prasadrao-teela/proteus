@@ -91,6 +91,13 @@ public class SectionsPagerAdapter extends ProteusPagerAdapter {
         return new SectionsPagerAdapter(context.getInflater(), data, layouts, count);
     }
 
+
+    @Override
+    public Value getActions(int position){
+        ObjectValue objectValue =  data.getAsArray(ITEMS).get(position).getAsObject();
+        return objectValue.get(ACTIONS);
+    }
+
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {

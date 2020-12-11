@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.flipkart.android.proteus.DataContext;
@@ -40,9 +41,6 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
     @NonNull private final ViewPagerAdapterFactory adapterFactory;
 
     private TabLayout tabLayout;
-    private Value onPageStartValue;
-    private Value onPageEndValue;
-    private Value onPageChangedValue;
 
     public ViewPagerParser(@NonNull ViewPagerAdapterFactory adapterFactory) {
         this.adapterFactory = adapterFactory;
@@ -185,55 +183,26 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
             }
         });
 
-        addAttributeProcessor("onPageStart", new EventProcessor<V>() {
-            @Override
-            public void setOnEventListener(V view, Value value) {
-                onPageStartValue = value;
-                registerOnPageListener(this, view);
-            }
-        });
-
-        addAttributeProcessor("onPageEnd", new EventProcessor<V>() {
-            @Override
-            public void setOnEventListener(V view, Value value) {
-                onPageEndValue = value;
-                registerOnPageListener(this, view);
-            }
-        });
-
         addAttributeProcessor("onPageChanged", new EventProcessor<V>() {
             @Override
             public void setOnEventListener(V view, Value value) {
-                onPageChangedValue = value;
-                registerOnPageListener(this, view);
-                registerOnPageListener(this, view);
-                registerOnPageListener(this, view);
+                view.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+
+                    @Override
+                    public void onPageSelected(int position) {
+                        PagerAdapter adapter = view.getAdapter();
+                        if (adapter instanceof ProteusPagerAdapter) {
+                            Value action = ((ProteusPagerAdapter) adapter).getActions(position);
+                            trigger("onPageChanged", action, (ProteusView) view);
+                        }
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int state) { }
+                });
             }
         });
-    }
-
-    private void registerOnPageListener(EventProcessor<V> eventProcessor, V view) {
-        final ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (onPageStartValue != null && position == 0) {
-                    eventProcessor.trigger("onPageStart", onPageStartValue, (ProteusView) view);
-                } else if (onPageEndValue != null && view.getAdapter() != null && position == view.getAdapter().getCount() - 1) {
-                    eventProcessor.trigger("onPageEnd", onPageEndValue, (ProteusView) view);
-                } else if (onPageChangedValue != null) {
-                    eventProcessor.trigger("onPageChanged", onPageChangedValue, (ProteusView) view);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        };
-        view.clearOnPageChangeListeners();      //Clear If existing onPageListener is registered
-        view.addOnPageChangeListener(onPageChangeListener);
     }
 }
