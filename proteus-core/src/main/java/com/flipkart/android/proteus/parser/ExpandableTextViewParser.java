@@ -56,6 +56,7 @@ public class ExpandableTextViewParser<V extends ProteusExpandableTextView>
                         view.collapse();
                     } else {
                         view.expand();
+                        trigger("expandText",value, view);
                     }
                 });
             }
