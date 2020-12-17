@@ -183,7 +183,7 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
             }
         });
 
-        addAttributeProcessor("onPageChanged", new EventProcessor<V>() {
+        addAttributeProcessor("enablePageChangeEvent", new EventProcessor<V>() {
             @Override
             public void setOnEventListener(V view, Value value) {
                 view.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -195,7 +195,7 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
                         PagerAdapter adapter = view.getAdapter();
                         if (adapter instanceof ProteusPagerAdapter) {
                             Value action = ((ProteusPagerAdapter) adapter).getActions(position);
-                            trigger("onPageChanged", action, (ProteusView) view);
+                            trigger("enablePageChangeEvent", action, (ProteusView) view);
                         }
                     }
 
