@@ -8,12 +8,14 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.flipkart.android.proteus.ProteusView;
 
+import java.util.ArrayList;
 /**
  * Created by Prasad Rao on 28-02-2020 18:18
  **/
 public class ProteusViewPager extends ViewPager implements ProteusView {
 
     private Manager manager;
+    private ArrayList<OnPageChangeListener> listeners = new ArrayList<>();
 
     public ProteusViewPager(@NonNull Context context) {
         super(context);
@@ -68,5 +70,35 @@ public class ProteusViewPager extends ViewPager implements ProteusView {
         }
         // super has to be called again so the new specs are treated as exact measurements
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
+    public void addOnPageChangeListener(@NonNull OnPageChangeListener listener) {
+        super.addOnPageChangeListener(listener);
+        this.listeners.add(listener);
+    }
+
+    @Override
+    public void removeOnPageChangeListener(@NonNull OnPageChangeListener listener) {
+        super.removeOnPageChangeListener(listener);
+        this.listeners.remove(listener);
+    }
+
+    @Override
+    public void setCurrentItem(int item) {
+        if (item != getCurrentItem()) {
+            super.setCurrentItem(item);
+        } else {
+            post(() -> dispatchOnPageSelected(item));
+        }
+    }
+
+    private void dispatchOnPageSelected(int position) {
+        for (int i = 0, size = listeners.size(); i < size; i++) {
+            OnPageChangeListener listener = listeners.get(i);
+            if (listener != null) {
+                listener.onPageSelected(position);
+            }
+        }
     }
 }
