@@ -38,8 +38,8 @@ public abstract class ProteusRecyclerViewAdapter<VH extends ProteusViewHolder>
     }
 
     private OnItemClickListener onItemClickListener;
-    private OnAnyItemSelectedListener onAnyItemSelectedListener;
-    private OnNoItemSelectedListener onNoItemSelectedListener;
+    private static OnAnyItemSelectedListener onAnyItemSelectedListener;
+    private static OnNoItemSelectedListener onNoItemSelectedListener;
     private boolean enableUnSelect;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -50,16 +50,16 @@ public abstract class ProteusRecyclerViewAdapter<VH extends ProteusViewHolder>
         return onItemClickListener;
     }
 
-    public void setOnAnyItemSelectedListener(OnAnyItemSelectedListener onAnyItemSelectedListener){
-        this.onAnyItemSelectedListener = onAnyItemSelectedListener;
+    public void setOnAnyItemSelectedListener(OnAnyItemSelectedListener listener){
+        onAnyItemSelectedListener = listener;
     }
 
     public OnAnyItemSelectedListener getOnAnyItemSelectedListener(){
         return onAnyItemSelectedListener;
     }
 
-    public void setOnNoItemSelectedListener(OnNoItemSelectedListener onNoItemSelectedListener){
-        this.onNoItemSelectedListener = onNoItemSelectedListener;
+    public void setOnNoItemSelectedListener(OnNoItemSelectedListener listener){
+        onNoItemSelectedListener = listener;
     }
 
     public OnNoItemSelectedListener getOnNoItemSelectedListener(){

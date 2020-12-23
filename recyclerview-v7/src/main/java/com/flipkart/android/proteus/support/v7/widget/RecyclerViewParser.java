@@ -16,6 +16,7 @@
 
 package com.flipkart.android.proteus.support.v7.widget;
 
+import android.util.Log;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -226,6 +227,7 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
             public void setOnEventListener(V view, Value value) {
                 ProteusRecyclerViewAdapter<?> adapter =
                         (ProteusRecyclerViewAdapter<?>) view.getAdapter();
+                Log.d("====Debug:::","====Debug:::"+adapter)
                 if (adapter != null) {
                     adapter.setOnAnyItemSelectedListener((proteusView) -> trigger(ATTRIBUTE_ON_ANY_ITEM_SELECTED, value, proteusView));
                 }
