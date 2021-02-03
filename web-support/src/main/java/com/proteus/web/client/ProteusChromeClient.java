@@ -1,6 +1,7 @@
 package com.proteus.web.client;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -10,7 +11,9 @@ import android.net.Uri;
 import android.os.Message;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -36,14 +39,39 @@ public class ProteusChromeClient extends WebChromeClient {
         this.fileChooserHelper = FileChooserHelper.getInstance();
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture,
         Message resultMsg) {
-        final WebView.HitTestResult hitTestResult = view.getHitTestResult();
-        final String data = hitTestResult.getExtra();
-        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(data));
-        view.getContext().startActivity(browserIntent);
-        return false;
+        if(isDialog){
+            WebView newWebView = new WebView(view.getContext());
+            newWebView.getSettings().setJavaScriptEnabled(true);
+            newWebView.getSettings().setSupportZoom(true);
+            newWebView.getSettings().setBuiltInZoomControls(true);
+            newWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
+            newWebView.getSettings().setSupportMultipleWindows(true);
+            view.addView(newWebView);
+            WebView.WebViewTransport transport = (WebView.WebViewTransport) resultMsg.obj;
+            transport.setWebView(newWebView);
+            resultMsg.sendToTarget();
+
+            newWebView.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    view.loadUrl(url);
+                    return true;
+                }
+            });
+
+        } else {
+            final WebView.HitTestResult hitTestResult = view.getHitTestResult();
+            final String data = hitTestResult.getExtra();
+            if (data == null)
+                return false;
+            final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(data));
+            view.getContext().startActivity(browserIntent);
+        }
+        return true;
     }
 
     @Override
