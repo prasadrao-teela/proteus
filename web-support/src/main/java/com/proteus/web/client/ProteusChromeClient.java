@@ -1,6 +1,7 @@
 package com.proteus.web.client;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -8,9 +9,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Message;
+import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -36,14 +41,46 @@ public class ProteusChromeClient extends WebChromeClient {
         this.fileChooserHelper = FileChooserHelper.getInstance();
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture,
         Message resultMsg) {
-        final WebView.HitTestResult hitTestResult = view.getHitTestResult();
-        final String data = hitTestResult.getExtra();
-        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(data));
-        view.getContext().startActivity(browserIntent);
-        return false;
+        if(isDialog){
+            WebView newWebView = new WebView(view.getContext());
+            newWebView.getSettings().setJavaScriptEnabled(true);
+            newWebView.getSettings().setMixedContentMode(0);
+            CookieManager.getInstance().setAcceptThirdPartyCookies(newWebView, true);
+            newWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            CookieManager.getInstance().setAcceptCookie(true);
+            newWebView.getSettings().setDomStorageEnabled(true);
+            newWebView.getSettings().setAllowFileAccess(true);
+            newWebView.getSettings().setSupportMultipleWindows(true);
+            newWebView.getSettings().setJavaScriptEnabled(true);
+            newWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+            newWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
+            newWebView.getSettings().setSupportMultipleWindows(true);
+            view.addView(newWebView);
+            WebView.WebViewTransport transport = (WebView.WebViewTransport) resultMsg.obj;
+            transport.setWebView(newWebView);
+            resultMsg.sendToTarget();
+
+            newWebView.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    view.loadUrl(url);
+                    return true;
+                }
+            });
+
+        } else {
+            final WebView.HitTestResult hitTestResult = view.getHitTestResult();
+            final String data = hitTestResult.getExtra();
+            if (data == null)
+                return false;
+            final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(data));
+            view.getContext().startActivity(browserIntent);
+        }
+        return true;
     }
 
     @Override
