@@ -16,12 +16,14 @@
 
 package com.flipkart.android.proteus.value;
 
+import java.io.Serializable;
+
 /**
  * Value
  *
  * @author aditya.sharat
  */
-public abstract class Value {
+public abstract class Value implements Serializable {
 
   /**
    * Returns a deep copy of this value. Immutable elements
