@@ -69,7 +69,6 @@ public class MultiSelectionListAdapter extends ProteusRecyclerViewAdapter<Proteu
         holder.view.getAsView().setOnClickListener(v -> {
             itemsSelected[position] = !itemsSelected[position];
             holder.view.getAsView().setSelected(itemsSelected[position]);
-            System.out.println("==========> " + Arrays.toString(itemsSelected));
             if (getOnAnyItemSelectedListener() != null) {
                 if (isAnyItemSelected())
                     getOnAnyItemSelectedListener().onAnyItemSelected(holder.view);

@@ -54,7 +54,6 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
 
     private SingleSelectionListAdapter(ProteusContext context, ProteusLayoutInflater inflater, ObjectValue data,
                                        Layout layout, int count, boolean enabled) {
-        System.out.println("debug: ========== SingleSelectionListAdapter ===============");
         this.context = context;
         this.inflater = inflater;
         this.data = data;
@@ -125,7 +124,6 @@ public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<Prote
     }
 
     public ObjectValue getSelectedItem() {
-        System.out.println("debug: SingleSelectionListAdapter: " + data);
         Array items = this.data.getAsArray(ATTRIBUTE_ITEMS);
         for (int i = 0; i < items.size(); i++) {
             ObjectValue item = items.get(i).getAsObject();

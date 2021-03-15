@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -68,7 +69,8 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
   private static final String ID_STRING_START_PATTERN = "@+id/";
   private static final String ID_STRING_START_PATTERN1 = "@id/";
   private static final String ID_STRING_NORMALIZED_PATTERN = ":id/";
-
+  // variable to track event time
+  private long mLastClickTime = 0;
   @NonNull
   @Override
   public String getType() {
@@ -104,6 +106,11 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
         view.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1500) {
+              return;
+            }
+            mLastClickTime = SystemClock.elapsedRealtime();
+
             trigger(Attributes.View.OnClick, value, (ProteusView) view);
           }
         });

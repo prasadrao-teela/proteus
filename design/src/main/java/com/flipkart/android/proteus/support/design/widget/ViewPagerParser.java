@@ -186,6 +186,7 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
         addAttributeProcessor("enablePageChangeEvent", new EventProcessor<V>() {
             @Override
             public void setOnEventListener(V view, Value value) {
+                if(value.isPrimitive() && value.getAsBoolean()) {
                 view.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
                     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
@@ -202,6 +203,7 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
                     @Override
                     public void onPageScrollStateChanged(int state) { }
                 });
+            }
             }
         });
     }
